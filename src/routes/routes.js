@@ -6,6 +6,7 @@ import { GetPostsByIdUser, guardarPost } from '../services/PostService.js';
 import { authMiddleware } from '../auth/Middleware.js';
 import { guardarComment } from '../services/CommentService.js';
 import SSE from 'express-sse';
+import { obtenerNotificationes } from '../services/NotificationService.js';
 
 const app = express();
 const sse = new SSE();
@@ -129,26 +130,26 @@ app.post('/saveComentario', authMiddleware, async (req, res) => {
         const result = await guardarComment(req.body, res);
 
         // MEJORAR LOGICA PARA DECIRIR A QUIEN ENVIAR LA NOTIFICACION
-        let eventData = {
-            user: result.newComment.user.toString(),
-            data: result.newComment,
-            Notification: result.notification
-        }
+        // let eventData = {
+        //     user: result.newComment.user.toString(),
+        //     data: result.newComment,
+        //     Notification: result.notification
+        // }
         console.log(result);
         try {
             if (req.body.parentComment) {
-                if (result.newComment.user.toString() !== result.owenerComment.user.toString()) {
-                    sendSSEToUser(result.owenerComment.user.toString(), eventData);
+                if (result.newComment.user.toString() !== result.ownerComment[0].user.toString()) {
+                    sendSSEToUser(result.ownerComment[0].user.toString(), result);
                 }
 
                 result.userId.map((value) => {
-                    if ((value !== result.owenerComment.user.toString()) && value !== result.newComment.user.toString()) {
-                        sendSSEToUser(value, eventData);
+                    if ((value !== result.ownerComment[0].user.toString()) && value !== result.newComment.user.toString()) {
+                        sendSSEToUser(value, result);
                     }
                 })
             } else {
                 if (result.userId[0] !== result.newComment.user.toString()) {
-                    sendSSEToUser(result.userId[0], eventData);
+                    sendSSEToUser(result.userId[0], result);
                 }
             }
             //sse.emit(result.userId, result.notification?.action, { message: `enviando notificacion` });
@@ -161,6 +162,15 @@ app.post('/saveComentario', authMiddleware, async (req, res) => {
     } catch (error) {
         console.error('Error al reaccionar:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
+    }
+})
+
+app.post('/obtenerNotificaciones', authMiddleware, async (req, res) => {
+    try {
+        return await obtenerNotificationes(req.body, res);
+    } catch (error) {
+        console.error('Error al obtener notificaciones:', error);
+        return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
     }
 })
 

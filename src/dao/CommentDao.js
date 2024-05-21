@@ -73,4 +73,34 @@ export const getCommentUserIdByComment = async (id) => {
     }
 }
 
-export default { saveComment, getCommentUserIdByComment, getPostUserIdByComment }
+export const getCommentOwnerByParentComment = async (id) => {
+    const idComment = new ObjectId(id);
+
+    try {
+        const UserId = Comment.aggregate(
+            [
+                {
+                    $match: {
+                        _id: idComment
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "comments",
+                        localField: "parentComment",
+                        foreignField: "_id",
+                        as: "OwnerComment"
+                    }
+                }
+            ]
+
+        );
+        console.log("Dao", UserId);
+        return UserId;
+    } catch (error) {
+        throw error
+    }
+}
+
+
+export default { saveComment, getCommentUserIdByComment, getPostUserIdByComment, getCommentOwnerByParentComment }

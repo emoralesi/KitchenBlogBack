@@ -1,4 +1,4 @@
-import { getCommentUserIdByComment, getPostUserIdByComment, saveComment } from "../dao/CommentDao.js";
+import { getCommentOwnerByParentComment, getCommentUserIdByComment, getPostUserIdByComment, saveComment } from "../dao/CommentDao.js";
 import { TypeNotification, TypeReferenceModelo } from "../utils/enumTypeNoti.js";
 import { sendNotification } from "../utils/notificationSend.js";
 
@@ -27,18 +27,18 @@ export const guardarComment = async (params, res) => {
 
             // Obtener user_notificated START
             var userNotificated;
-            var owenerComment = null;
+            var ownerComment = null;
 
             if (params.parentComment) {
                 userNotificated = await getCommentUserIdByComment(params.parentComment);
-                owenerComment = { user: userNotificated[0].user }
+                ownerComment = await getCommentOwnerByParentComment(params.parentComment);
 
                 let FromatUserId = userNotificated[0].result.map(comment => comment.user.toString());
                 userId = Array.from(new Set(FromatUserId));
 
-                if (newComment.user.toString() !== owenerComment.user.toString()) {
+                if (newComment.user.toString() !== ownerComment[0].user.toString()) {
                     await sendNotification({
-                        user_notificated: owenerComment.user.toString(),
+                        user_notificated: ownerComment[0].user.toString(),
                         user_action: params.user,
                         reference_id: idComment,
                         referenceModelo: TypeReferenceModelo.Comentario,
@@ -48,7 +48,7 @@ export const guardarComment = async (params, res) => {
                 }
 
                 userId.map(async (value) => {
-                    if ((value !== owenerComment.user.toString()) && value !== newComment.user.toString()) {
+                    if ((value !== ownerComment[0].user.toString()) && value !== newComment.user.toString()) {
                         await sendNotification({
                             user_notificated: value,
                             user_action: params.user,
@@ -87,7 +87,7 @@ export const guardarComment = async (params, res) => {
             console.error(error);
         }
 
-        return { newComment, userId, action_noti, owenerComment };
+        return { newComment, userId, action_noti, ownerComment };
 
     } catch (error) {
         console.error('Error al registrar comentario:', error);
