@@ -5,7 +5,7 @@ const commentSchema = new mongoose.Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   post: { type: Schema.Types.ObjectId, ref: 'Post' },
   reactions: [{ type: Schema.Types.ObjectId, ref: 'Reaction' }],
-  parentComment: { type: Schema.Types.ObjectId }
+  parentComment: { type: Schema.Types.ObjectId, ref :'Comment' }
 });
 
 const Comment = mongoose.model('Comment', commentSchema);

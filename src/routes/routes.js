@@ -2,7 +2,7 @@ import express from 'express'
 import { getUserbyEmail, saveUser } from '../dao/UserDao.js';
 import { body, validationResult } from 'express-validator';
 import { LoginUser, UserRegister } from '../services/UserService.js';
-import { GetPostsByIdUser, guardarPost } from '../services/PostService.js';
+import { GetFullPostById, GetPostsByIdUser, guardarPost } from '../services/PostService.js';
 import { authMiddleware } from '../auth/Middleware.js';
 import { guardarComment } from '../services/CommentService.js';
 import SSE from 'express-sse';
@@ -15,6 +15,7 @@ const connections = new Map();
 
 function sendSSEToUser(userId, eventData) {
     // Encuentra la conexión del usuario
+    console.log("mi user id notificado", userId);
     const userConnections = connections.get(userId.toString());
 
     // Si el usuario tiene conexiones abiertas
@@ -104,9 +105,18 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/obtenerUserAndPost', authMiddleware, async (req, res) => {
+app.post('/obtenerUserAndPost', authMiddleware, async (req, res) => {
     try {
         return await GetPostsByIdUser(req.body, res);
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
+    }
+})
+
+app.post('/obtenerPostById', authMiddleware, async (req, res) => {
+    try {
+        return await GetFullPostById(req.body, res);
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
@@ -139,16 +149,19 @@ app.post('/saveComentario', authMiddleware, async (req, res) => {
         try {
             if (req.body.parentComment) {
                 if (result.newComment.user.toString() !== result.ownerComment[0].user.toString()) {
+                    console.log("caso 1");
                     sendSSEToUser(result.ownerComment[0].user.toString(), result);
                 }
 
                 result.userId.map((value) => {
                     if ((value !== result.ownerComment[0].user.toString()) && value !== result.newComment.user.toString()) {
+                        console.log("caso 2");
                         sendSSEToUser(value, result);
                     }
                 })
             } else {
                 if (result.userId[0] !== result.newComment.user.toString()) {
+                    console.log("caso 3");
                     sendSSEToUser(result.userId[0], result);
                 }
             }
