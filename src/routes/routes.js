@@ -1,7 +1,7 @@
 import express from 'express'
 import { getUserbyEmail, saveUser } from '../dao/UserDao.js';
 import { body, validationResult } from 'express-validator';
-import { LoginUser, UserRegister } from '../services/UserService.js';
+import { LoginUser, UserRegister, getUserDescubrir } from '../services/UserService.js';
 import { GetFullPostById, GetPostsByIdUser, guardarPost } from '../services/PostService.js';
 import { authMiddleware } from '../auth/Middleware.js';
 import { guardarComment } from '../services/CommentService.js';
@@ -109,8 +109,17 @@ app.post('/obtenerUserAndPost', authMiddleware, async (req, res) => {
     try {
         return await GetPostsByIdUser(req.body, res);
     } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
+        console.error('Error al obtener usuario y post: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y post' });
+    }
+})
+
+app.post('/obtenerUsuariosDescubrir', authMiddleware, async (req, res) => {
+    try {
+        return await getUserDescubrir(req.body, res);
+    } catch (error) {
+        console.error('Error al obtener usuario:', error);
+        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y post' });
     }
 })
 

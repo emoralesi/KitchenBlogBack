@@ -1,4 +1,4 @@
-import { getUserbyEmail, saveUser } from "../dao/UserDao.js";
+import { getUserbyEmail, getUsersDescovery, saveUser } from "../dao/UserDao.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -50,6 +50,16 @@ export const LoginUser = async (body, res) => {
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
+    }
+}
+
+export const getUserDescubrir = async (body, res) => {
+    const usuarios = await getUsersDescovery(body.userId);
+    console.log(usuarios);
+    if (usuarios.length > 0) {
+        res.status(200).json({ status: 'ok', message: 'Se encontraron ' + usuarios.length + ' usuarios', usuarios: usuarios });
+    } else {
+        res.status(200).json({ status: 'notContent', message: 'No se encontraron Posts' });
     }
 }
 
