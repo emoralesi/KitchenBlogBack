@@ -1,16 +1,16 @@
-import Post from '../models/postModel.js';
 import { ObjectId } from 'mongodb';
+import Receta from '../models/RecetaModel.js';
 
-export const savePost = async (post) => {
+export const saveReceta = async (receta) => {
     try {
-        const posts = new Post(post);
-        return await posts.save();
+        const Recetas = new Receta(receta);
+        return await Recetas.save();
     } catch (error) {
         throw error;
     }
 }
 
-export const getUserByPostId = async (id) => {
+export const getUserByRecetaId = async (id) => {
     try {
 
     } catch (error) {
@@ -18,22 +18,22 @@ export const getUserByPostId = async (id) => {
     }
 }
 
-export const getPostComentReactions = async (idPost) => {
-    const postId = new ObjectId(idPost);
+export const getRecetaComentReactions = async (idReceta) => {
+    const RecetaId = new ObjectId(idReceta);
     try {
-        return await Post.aggregate(
+        return await Receta.aggregate(
             [
                 {
-                    $match: { _id: postId }
+                    $match: { _id: RecetaId }
                 },
                 {
                     $lookup: {
                         from: "comments",
-                        let: { postId: "$_id" },
+                        let: { RecetaId: "$_id" },
                         pipeline: [
                             {
                                 $match: {
-                                    $expr: { $eq: ["$post", "$$postId"] },
+                                    $expr: { $eq: ["$Receta", "$$RecetaId"] },
                                     $or: [
                                         { "parentComment": null },
                                         { "parentComment": { $exists: false } }
@@ -69,4 +69,4 @@ export const getPostComentReactions = async (idPost) => {
     }
 }
 
-export default { savePost, getPostComentReactions }
+export default { saveReceta, getRecetaComentReactions }

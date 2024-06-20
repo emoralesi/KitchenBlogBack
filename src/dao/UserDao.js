@@ -19,7 +19,7 @@ export const saveUser = async (user) => {
     }
 }
 
-export const obtenerPostByIdUser = async (idUser) => {
+export const obtenerRecetaByIdUser = async (idUser) => {
     const userId = new ObjectId(idUser);
     try {
         return await Usuario.aggregate([
@@ -86,4 +86,4 @@ export const getUsersDescovery = async (idUser) => {
     }
 }
 
-export default { saveUser, obtenerPostByIdUser, getUserbyEmail }
+export default { saveUser, obtenerRecetaByIdUser, getUserbyEmail }

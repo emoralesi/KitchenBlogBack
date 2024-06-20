@@ -2,11 +2,19 @@ import express from 'express'
 import { getUserbyEmail, saveUser } from '../dao/UserDao.js';
 import { body, validationResult } from 'express-validator';
 import { LoginUser, UserRegister, getUserDescubrir } from '../services/UserService.js';
-import { GetFullPostById, GetPostsByIdUser, guardarPost } from '../services/PostService.js';
+import { GetFullRecetaById, GetRecetasByIdUser, guardarReceta } from '../services/RecetaService.js';
 import { authMiddleware } from '../auth/Middleware.js';
 import { guardarComment } from '../services/CommentService.js';
 import SSE from 'express-sse';
 import { obtenerNotificationes } from '../services/NotificationService.js';
+import { getIngrediente, saveIngrediente } from '../dao/IngredienteDao.js';
+import { getMedida, saveMedida } from '../dao/MedidaDao.js';
+import { saveItem } from '../dao/ItemDao.js';
+import { saveGrupoIngrediente } from '../dao/GrupoIngredienteDao.js';
+import { getDificultad, saveDificultad } from '../dao/DificultadDao.js';
+import { getCategoria, saveCategoria } from '../dao/CategoriaDao.js';
+import { getUtencilios, saveUtencilio } from '../dao/UtencilioDao.js';
+import { getSubCategoria, saveSubCategoria } from '../dao/SubCategoriaDao.js';
 
 const app = express();
 const sse = new SSE();
@@ -105,12 +113,12 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.post('/obtenerUserAndPost', authMiddleware, async (req, res) => {
+app.post('/obtenerUserAndReceta', authMiddleware, async (req, res) => {
     try {
-        return await GetPostsByIdUser(req.body, res);
+        return await GetRecetasByIdUser(req.body, res);
     } catch (error) {
-        console.error('Error al obtener usuario y post: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y post' });
+        console.error('Error al obtener usuario y Receta: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y Receta' });
     }
 })
 
@@ -119,23 +127,23 @@ app.post('/obtenerUsuariosDescubrir', authMiddleware, async (req, res) => {
         return await getUserDescubrir(req.body, res);
     } catch (error) {
         console.error('Error al obtener usuario:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y post' });
+        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y Receta' });
     }
 })
 
-app.post('/obtenerPostById', authMiddleware, async (req, res) => {
+app.post('/obtenerRecetaById', authMiddleware, async (req, res) => {
     try {
-        return await GetFullPostById(req.body, res);
+        return await GetFullRecetaById(req.body, res);
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
     }
 })
 
-app.post('/savePost', authMiddleware, async (req, res) => {
+app.post('/saveReceta', async (req, res) => {
     try {
 
-        return await guardarPost(req.body, res)
+        return await guardarReceta(req.body, res)
 
     } catch (error) {
         console.error('Error al reaccionar:', error);
@@ -193,6 +201,146 @@ app.post('/obtenerNotificaciones', authMiddleware, async (req, res) => {
     } catch (error) {
         console.error('Error al obtener notificaciones:', error);
         return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
+    }
+})
+
+app.post('/saveIngrediente', authMiddleware, async (req, res) => {
+    try {
+        const ingrediente = await saveIngrediente(req.body);
+        res.status(200).json({ data: ingrediente })
+    } catch (error) {
+        console.error('Error al registrar ingrediente: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar ingredientea' });
+    }
+})
+
+app.post('/saveMedida', authMiddleware, async (req, res) => {
+    try {
+        const medida = await saveMedida(req.body);
+        res.status(200).json({ data: medida })
+    } catch (error) {
+        console.error('Error al registrar medida: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar medida' });
+    }
+})
+
+app.post('/saveItem', authMiddleware, async (req, res) => {
+    try {
+        const Item = await saveItem(req.body);
+        res.status(200).json({ data: Item })
+    } catch (error) {
+        console.error('Error al registrar Item: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar Item' });
+    }
+})
+
+app.post('/saveGrupo', authMiddleware, async (req, res) => {
+    try {
+        const GrupoIngrediente = await saveGrupoIngrediente(req.body);
+        res.status(200).json({ data: GrupoIngrediente })
+    } catch (error) {
+        console.error('Error al registrar Grupo de ingrediente: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar Grupo de ingrediente' });
+    }
+})
+
+app.post('/saveDificultad', authMiddleware, async (req, res) => {
+    try {
+        const Dificultad = await saveDificultad(req.body);
+        res.status(200).json({ data: Dificultad })
+    } catch (error) {
+        console.error('Error al registrar Dificultad: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar Dificultad' });
+    }
+})
+
+app.post('/saveCategoria', authMiddleware, async (req, res) => {
+    try {
+        const Categoria = await saveCategoria(req.body);
+        res.status(200).json({ data: Categoria })
+    } catch (error) {
+        console.error('Error al registrar Categoria: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar Categoria' });
+    }
+})
+
+app.post('/saveSubCategoria', authMiddleware, async (req, res) => {
+    try {
+        const SubCategoria = await saveSubCategoria(req.body);
+        res.status(200).json({ data: SubCategoria })
+    } catch (error) {
+        console.error('Error al registrar Sub Categoria: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar Sub Categoria' });
+    }
+})
+
+app.post('/saveUtencilio', authMiddleware, async (req, res) => {
+    try {
+        const Utencilio = await saveUtencilio(req.body);
+        res.status(200).json({ data: Utencilio })
+    } catch (error) {
+        console.error('Error al registrar Utencilio: ', error);
+        return res.status(500).json({ message: 'Error interno del servidor al registrar Utencilio' });
+    }
+})
+
+app.get('/obtenerSubCategorias', authMiddleware, async (req, res) => {
+    try {
+        const SubCategorias = await getSubCategoria();
+        res.status(200).json({ status: 'ok', data: SubCategorias })
+    } catch (error) {
+        console.error('Error al obtener Sub categorias: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Sub categorias' });
+    }
+})
+
+app.get('/obtenerUtencilios', authMiddleware, async (req, res) => {
+    try {
+        const Utencilios = await getUtencilios();
+        res.status(200).json({ status: 'ok', data: Utencilios })
+    } catch (error) {
+        console.error('Error al obtener Utencilio: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Utencilios' });
+    }
+})
+
+app.get('/obtenerCategorias', authMiddleware, async (req, res) => {
+    try {
+        const Categoria = await getCategoria();
+        res.status(200).json({ status: 'ok', data: Categoria })
+    } catch (error) {
+        console.error('Error al obtener Categoria: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Categoria' });
+    }
+})
+
+app.get('/obtenerIngredientes', authMiddleware, async (req, res) => {
+    try {
+        const Ingredientes = await getIngrediente();
+        res.status(200).json({ status: 'ok', data: Ingredientes })
+    } catch (error) {
+        console.error('Error al obtener Ingredientes: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Ingredientes' });
+    }
+})
+
+app.get('/obtenerMedidas', authMiddleware, async (req, res) => {
+    try {
+        const Medidas = await getMedida();
+        res.status(200).json({ status: 'ok', data: Medidas })
+    } catch (error) {
+        console.error('Error al obtener Medidas: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Medidas' });
+    }
+})
+
+app.get('/obtenerDificultades', authMiddleware, async (req, res) => {
+    try {
+        const Dificultades = await getDificultad();
+        res.status(200).json({ status: 'ok', data: Dificultades })
+    } catch (error) {
+        console.error('Error al obtener Dificultades: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Dificultades' });
     }
 })
 
