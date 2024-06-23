@@ -55,11 +55,11 @@ export const getNotifications = async (idUser) => {
                             },
                             then: {
                                 type: "Comentario",
-                                postId: "$comment.post"
+                                recetaId: "$comment.receta"
                             },
                             else: {
                                 type: "Reaction",
-                                postId: "$reaction.post"
+                                recetaId: "$reaction.receta"
                             }
                         }
                     }
@@ -67,10 +67,10 @@ export const getNotifications = async (idUser) => {
             },
             {
                 $lookup: {
-                    from: "posts",
-                    localField: "item.postId",
+                    from: "recetas",
+                    localField: "item.recetaId",
                     foreignField: "_id",
-                    as: "item.PostInfo"
+                    as: "item.RecetaInfo"
                 }
             },
             {

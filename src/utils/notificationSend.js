@@ -7,7 +7,7 @@ export const sendNotification = async (params) => {
             readed: false,
             user_notificated: params.user_notificated,
             user_action: params.user_action,
-            reference_id: params.reference_id, // referenciaModelo es un campo virtual que se utilizará para determinar si la referencia es para un Post o un Comentario
+            reference_id: params.reference_id, // referenciaModelo es un campo virtual que se utilizará para determinar si la referencia es para un Receta o un Comentario
             referenceModelo: params.referenceModelo,
             action: params.action
         };

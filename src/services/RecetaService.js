@@ -10,10 +10,11 @@ export const GetRecetasByIdUser = async (params, res) => {
     try {
         const Recetas = await obtenerRecetaByIdUser(params.userId);
         console.log(Recetas);
-        if (Recetas[0]?.Recetaeos.length > 0) {
-            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas[0].Recetaeos.length + ' Recetas', Recetas: Recetas[0].Recetaeos });
+        console.log(Recetas[0]?.recetas?.length);
+        if (Recetas[0]?.recetas?.length > 0) {
+            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas[0].recetas.length + ' Recetas', Recetas: Recetas[0].recetas });
         } else {
-            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas' });
+            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Recetas: Recetas[0]?.recetas });
         }
     } catch (error) {
         console.error('Error al obtener usuarios Recetas:', error);
@@ -24,7 +25,7 @@ export const GetRecetasByIdUser = async (params, res) => {
 export const GetFullRecetaById = async (params, res) => {
     console.log(params);
     try {
-        const Recetas = await getRecetaComentReactions(params.RecetaId);
+        const Recetas = await getRecetaComentReactions(params.recetaId);
         console.log(Recetas);
         if (Recetas.length > 0) {
             res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas.length + ' Receta', Receta: Recetas[0] });
@@ -39,11 +40,11 @@ export const GetFullRecetaById = async (params, res) => {
 
 export const guardarReceta = async (params, res) => {
 
-    params.images = [''];
+    params.images = ['https://via.placeholder.com/400'];
 
     const session = await mongoose.startSession();
     session.startTransaction();
-
+    console.log("mi params", params);
     try {
         var gruposId = [];
         for (const values of params.grupoIngrediente) {
@@ -70,12 +71,12 @@ export const guardarReceta = async (params, res) => {
         await session.commitTransaction();
         session.endSession();
 
-        return res.status(200).json({ Receta: newReceta, message: 'Receta registrado con éxito' });
+        return res.status(200).json({ status: 'ok', receta: newReceta, message: 'Receta registrado con éxito' });
 
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
         console.error('Error al registrar Receta:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar usuario' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar usuario' });
     }
 }

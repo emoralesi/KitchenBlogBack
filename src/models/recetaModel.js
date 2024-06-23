@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const postSchema = new mongoose.Schema({
+const recetaSchema = new mongoose.Schema({
   titulo: String,
   descripcion: String,
   images: [],
@@ -22,20 +22,21 @@ const postSchema = new mongoose.Schema({
   reactions: [{ type: Schema.Types.ObjectId, ref: 'Reaction' }],
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   pasos: [{ type: Schema.Types.ObjectId, ref: 'Pasos' }],
-  fechaPost: {
+  user: { type: Schema.Types.ObjectId, ref: 'Usuario' },
+  fechaReceta: {
     type: Date,
     default: Date.now
   }
 });
 
 // Método para obtener la duración formateada
-// postSchema.methods.getFormattedDuration = function() {
+// recetaSchema.methods.getFormattedDuration = function() {
 //   const totalMinutes = (this.hours * 60) + this.minutes;
 //   const h = Math.floor(totalMinutes / 60);
 //   const m = totalMinutes % 60;
 //   return h > 0 ? `${h}h ${m}min` : `${m}min`;
 // };
 
-const Receta = mongoose.model('Receta', postSchema);
+const Receta = mongoose.model('Receta', recetaSchema);
 
 export default Receta;

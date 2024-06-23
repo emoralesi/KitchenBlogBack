@@ -1,8 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const usuarioSchema = new mongoose.Schema({
-    email: { type: String, unique: true },
-    password: String,
+    email: { type: String, unique: true, require: true },
+    username: { type: String, unique: true, require: true },
+    favourite: [{ type: Schema.Types.ObjectId, ref: 'Receta' }],
+    password: { type: String, unique: true, require: true },
 });
 
 const Usuario = mongoose.model('Usuario', usuarioSchema);

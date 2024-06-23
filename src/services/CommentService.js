@@ -1,4 +1,4 @@
-import { getCommentOwnerByParentComment, getCommentUserIdByComment, getPostUserIdByComment, saveComment } from "../dao/CommentDao.js";
+import { getCommentOwnerByParentComment, getCommentUserIdByComment, getRecetaUserIdByComment, saveComment } from "../dao/CommentDao.js";
 import { TypeNotification, TypeReferenceModelo } from "../utils/enumTypeNoti.js";
 import { sendNotification } from "../utils/notificationSend.js";
 
@@ -9,7 +9,7 @@ export const guardarComment = async (params, res) => {
         const comment = {
             content: params.content,
             user: params.user,
-            post: params.post,
+            receta: params.receta,
             reactions: params?.reactions,
             parentComment: params?.parentComment
         };
@@ -19,7 +19,7 @@ export const guardarComment = async (params, res) => {
         var userId = null;
         const action_noti = params.parentComment
             ? TypeNotification.CommentToAnswerd
-            : TypeNotification.CommentToPost;
+            : TypeNotification.CommentToReceta;
 
         try {
 
@@ -61,7 +61,7 @@ export const guardarComment = async (params, res) => {
                 })
 
             } else {
-                userNotificated = await getPostUserIdByComment(idComment);
+                userNotificated = await getRecetaUserIdByComment(idComment);
                 userId = [userNotificated[0].result[0].user.toString()];
 
                 userId?.map(async (value) => {

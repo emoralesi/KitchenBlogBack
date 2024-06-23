@@ -29,11 +29,11 @@ export const getRecetaComentReactions = async (idReceta) => {
                 {
                     $lookup: {
                         from: "comments",
-                        let: { RecetaId: "$_id" },
+                        let: { recetaId: "$_id" },
                         pipeline: [
                             {
                                 $match: {
-                                    $expr: { $eq: ["$Receta", "$$RecetaId"] },
+                                    $expr: { $eq: ["$receta", "$$recetaId"] },
                                     $or: [
                                         { "parentComment": null },
                                         { "parentComment": { $exists: false } }

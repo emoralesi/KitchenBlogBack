@@ -1,7 +1,7 @@
 import express from 'express'
-import { getUserbyEmail, saveUser } from '../dao/UserDao.js';
+import { getUserbyEmail, getUserbyUsename, obtenerFavouriteByIdUser, saveUser } from '../dao/UserDao.js';
 import { body, validationResult } from 'express-validator';
-import { LoginUser, UserRegister, getUserDescubrir } from '../services/UserService.js';
+import { LoginUser, UserRegister, getUserDescubrir, saveUpdateFavourite } from '../services/UserService.js';
 import { GetFullRecetaById, GetRecetasByIdUser, guardarReceta } from '../services/RecetaService.js';
 import { authMiddleware } from '../auth/Middleware.js';
 import { guardarComment } from '../services/CommentService.js';
@@ -94,13 +94,13 @@ app.post(
         // Validar los datos de entrada
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ status: 'warning', errors: errors.array() });
         }
         try {
             return UserRegister(req.body, res)
         } catch (error) {
             console.error('Error al registrar usuario:', error);
-            return res.status(500).json({ message: 'Error interno del servidor al registrar usuario' });
+            return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar usuario' });
         }
     }
 );
@@ -109,7 +109,7 @@ app.post('/login', async (req, res) => {
         return await LoginUser(req.body, res);
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
     }
 });
 
@@ -118,7 +118,7 @@ app.post('/obtenerUserAndReceta', authMiddleware, async (req, res) => {
         return await GetRecetasByIdUser(req.body, res);
     } catch (error) {
         console.error('Error al obtener usuario y Receta: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y Receta' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener usuario y Receta' });
     }
 })
 
@@ -127,7 +127,7 @@ app.post('/obtenerUsuariosDescubrir', authMiddleware, async (req, res) => {
         return await getUserDescubrir(req.body, res);
     } catch (error) {
         console.error('Error al obtener usuario:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al obtener usuario y Receta' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener usuario y Receta' });
     }
 })
 
@@ -136,7 +136,7 @@ app.post('/obtenerRecetaById', authMiddleware, async (req, res) => {
         return await GetFullRecetaById(req.body, res);
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
     }
 })
 
@@ -147,7 +147,7 @@ app.post('/saveReceta', async (req, res) => {
 
     } catch (error) {
         console.error('Error al reaccionar:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
     }
 })
 
@@ -200,87 +200,87 @@ app.post('/obtenerNotificaciones', authMiddleware, async (req, res) => {
         return await obtenerNotificationes(req.body, res);
     } catch (error) {
         console.error('Error al obtener notificaciones:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al iniciar sesión' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
     }
 })
 
 app.post('/saveIngrediente', authMiddleware, async (req, res) => {
     try {
         const ingrediente = await saveIngrediente(req.body);
-        res.status(200).json({ data: ingrediente })
+        res.status(200).json({ status: 'ok', data: ingrediente })
     } catch (error) {
         console.error('Error al registrar ingrediente: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar ingredientea' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar ingredientea' });
     }
 })
 
 app.post('/saveMedida', authMiddleware, async (req, res) => {
     try {
         const medida = await saveMedida(req.body);
-        res.status(200).json({ data: medida })
+        res.status(200).json({ status: 'ok', data: medida })
     } catch (error) {
         console.error('Error al registrar medida: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar medida' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar medida' });
     }
 })
 
 app.post('/saveItem', authMiddleware, async (req, res) => {
     try {
         const Item = await saveItem(req.body);
-        res.status(200).json({ data: Item })
+        res.status(200).json({ status: 'ok', data: Item })
     } catch (error) {
         console.error('Error al registrar Item: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar Item' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar Item' });
     }
 })
 
 app.post('/saveGrupo', authMiddleware, async (req, res) => {
     try {
         const GrupoIngrediente = await saveGrupoIngrediente(req.body);
-        res.status(200).json({ data: GrupoIngrediente })
+        res.status(200).json({ status: 'ok', data: GrupoIngrediente })
     } catch (error) {
         console.error('Error al registrar Grupo de ingrediente: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar Grupo de ingrediente' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar Grupo de ingrediente' });
     }
 })
 
 app.post('/saveDificultad', authMiddleware, async (req, res) => {
     try {
         const Dificultad = await saveDificultad(req.body);
-        res.status(200).json({ data: Dificultad })
+        res.status(200).json({ status: 'ok', data: Dificultad })
     } catch (error) {
         console.error('Error al registrar Dificultad: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar Dificultad' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar Dificultad' });
     }
 })
 
 app.post('/saveCategoria', authMiddleware, async (req, res) => {
     try {
         const Categoria = await saveCategoria(req.body);
-        res.status(200).json({ data: Categoria })
+        res.status(200).json({ status: 'ok', data: Categoria })
     } catch (error) {
         console.error('Error al registrar Categoria: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar Categoria' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar Categoria' });
     }
 })
 
 app.post('/saveSubCategoria', authMiddleware, async (req, res) => {
     try {
         const SubCategoria = await saveSubCategoria(req.body);
-        res.status(200).json({ data: SubCategoria })
+        res.status(200).json({ status: 'ok', data: SubCategoria })
     } catch (error) {
         console.error('Error al registrar Sub Categoria: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar Sub Categoria' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar Sub Categoria' });
     }
 })
 
 app.post('/saveUtencilio', authMiddleware, async (req, res) => {
     try {
         const Utencilio = await saveUtencilio(req.body);
-        res.status(200).json({ data: Utencilio })
+        res.status(200).json({ status: 'ok', data: Utencilio })
     } catch (error) {
         console.error('Error al registrar Utencilio: ', error);
-        return res.status(500).json({ message: 'Error interno del servidor al registrar Utencilio' });
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar Utencilio' });
     }
 })
 
@@ -343,5 +343,36 @@ app.get('/obtenerDificultades', authMiddleware, async (req, res) => {
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Dificultades' });
     }
 })
+
+
+app.post('/obtenerIdUsuarioByUserName', authMiddleware, async (req, res) => {
+    try {
+        const Usuario = await getUserbyUsename(req.body.username);
+        res.status(200).json({ status: 'ok', userId: Usuario._id })
+    } catch (error) {
+        console.error('Error al obtener Dificultades: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Dificultades' });
+    }
+})
+
+app.post('/saveUpdateFavourite', authMiddleware, async (req, res) => {
+    try {
+        await saveUpdateFavourite(req.body, res);
+    } catch (error) {
+        console.error('Error al guardar o remover favourite: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al guardar o remover favourite' });
+    }
+})
+
+app.post('/obtenerFavourite', authMiddleware, async (req, res) => {
+    try {
+        const User = await obtenerFavouriteByIdUser(req.body.idUser);
+        res.status(200).json({ status: 'ok', data: User })
+    } catch (error) {
+        console.error('Error al obtener favourite: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener favourite' });
+    }
+})
+
 
 export default app

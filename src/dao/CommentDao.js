@@ -10,7 +10,7 @@ export const saveComment = async (comment) => {
     }
 }
 
-export const getPostUserIdByComment = async (id) => {
+export const getRecetaUserIdByComment = async (id) => {
     const idComment = new ObjectId(id);
     try {
         const UserId = Comment.aggregate(
@@ -22,15 +22,15 @@ export const getPostUserIdByComment = async (id) => {
                 },
                 {
                     $lookup: {
-                        from: 'posts',
-                        localField: 'post',
+                        from: 'recetas',
+                        localField: 'receta',
                         foreignField: '_id',
                         as: 'result'
                     }
                 }
             ]
         );
-        console.log("dao post user", UserId);
+        console.log("dao receta user", UserId);
         return UserId;
     } catch (error) {
         throw error
@@ -103,4 +103,4 @@ export const getCommentOwnerByParentComment = async (id) => {
 }
 
 
-export default { saveComment, getCommentUserIdByComment, getPostUserIdByComment, getCommentOwnerByParentComment }
+export default { saveComment, getCommentUserIdByComment, getRecetaUserIdByComment, getCommentOwnerByParentComment }

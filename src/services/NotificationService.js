@@ -7,7 +7,7 @@ export const guardarNotification = async (params, res) => {
         const notification = {
             content: params.content,
             user: params.user,
-            post: params.post,
+            receta: params.receta,
             reactions: params?.reactions,
             parentComment: params?.parentComment
         };

@@ -1,8 +1,8 @@
 export const TypeNotification = {
-    LikeToPost: 'likeToPost',
+    LikeToReceta: 'likeToReceta',
     LikeToComment: 'likeToComment',
     LikeToAnswerd: 'likeToAnswerd',
-    CommentToPost: 'commentToPost',
+    CommentToReceta: 'commentToReceta',
     CommentToAnswerd: 'commentToAnswerd'
 };
 
