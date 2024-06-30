@@ -73,13 +73,13 @@ export const getUserDescubrir = async (body, res) => {
 export const saveUpdateFavourite = async (params, res) => {
     try {
         let update;
-        console.log(params.estado);
+        console.log(params);
         if (params.estado == true) {
             // Add to favourites
-            update = { $addToSet: { favourite: params.IdReceta } }; // $addToSet prevents duplicates
+            update = { $addToSet: { favourite: params.idReceta } }; // $addToSet prevents duplicates
         } else if (params.estado == false) {
             // Remove from favourites
-            update = { $pull: { favourite: params.IdReceta } };
+            update = { $pull: { favourite: params.idReceta } };
         } else {
             return res.status(400).send({ status: 'warning', message: "Invalid status value. Use 'true' or 'false'." });
         }

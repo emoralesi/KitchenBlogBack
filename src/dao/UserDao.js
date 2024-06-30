@@ -9,6 +9,14 @@ export const getUserbyEmail = async (emailUser) => {
     }
 }
 
+export const getUserbyId = async (idUser) => {
+    try {
+        return await Usuario.findOne({ _id: idUser });
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const getUserbyUsename = async (userName) => {
     console.log("mi userName", userName);
     try {
@@ -194,4 +202,4 @@ export const getUsersDescovery = async (idUser) => {
     }
 }
 
-export default { saveUser, obtenerRecetaByIdUser, getUserbyEmail, getUserbyUsename, updateFavourite, obtenerFavouriteByIdUser }
+export default { saveUser, obtenerRecetaByIdUser, getUserbyEmail, getUserbyUsename, updateFavourite, obtenerFavouriteByIdUser, getUserbyId }

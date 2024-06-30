@@ -18,6 +18,20 @@ export const getUserByRecetaId = async (id) => {
     }
 }
 
+export const updateRecetaReaction = async (idReceta, update) => {
+    try {
+        const updateReaction = await Receta.findByIdAndUpdate(
+            idReceta,
+            update
+        );
+        return updateReaction
+    } catch (error) {
+        console.log(error);
+    }
+
+    return updatedUser;
+}
+
 export const getRecetaComentReactions = async (idReceta) => {
     const RecetaId = new ObjectId(idReceta);
     try {
@@ -35,8 +49,8 @@ export const getRecetaComentReactions = async (idReceta) => {
                                 $match: {
                                     $expr: { $eq: ["$receta", "$$recetaId"] },
                                     $or: [
-                                        { "parentComment": null },
-                                        { "parentComment": { $exists: false } }
+                                        { parentComment: null },
+                                        { parentComment: { $exists: false } }
                                     ]
                                 }
                             },
@@ -61,6 +75,99 @@ export const getRecetaComentReactions = async (idReceta) => {
                                 else: "$comments"
                             }
                         }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "usuarios",
+                        localField: "comments.user",
+                        foreignField: "_id",
+                        as: "commentUsers"
+                    }
+                },
+                {
+                    $addFields: {
+                        comments: {
+                            $map: {
+                                input: "$comments",
+                                as: "comment",
+                                in: {
+                                    $mergeObjects: [
+                                        "$$comment",
+                                        {
+                                            user: {
+                                                $arrayElemAt: [
+                                                    {
+                                                        $filter: {
+                                                            input: "$commentUsers",
+                                                            cond: { $eq: ["$$this._id", "$$comment.user"] }
+                                                        }
+                                                    },
+                                                    0
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "usuarios",
+                        localField: "comments.responses.user",
+                        foreignField: "_id",
+                        as: "responseUsers"
+                    }
+                },
+                {
+                    $addFields: {
+                        comments: {
+                            $map: {
+                                input: "$comments",
+                                as: "comment",
+                                in: {
+                                    $mergeObjects: [
+                                        "$$comment",
+                                        {
+                                            responses: {
+                                                $map: {
+                                                    input: "$$comment.responses",
+                                                    as: "response",
+                                                    in: {
+                                                        $mergeObjects: [
+                                                            "$$response",
+                                                            {
+                                                                user: {
+                                                                    $arrayElemAt: [
+                                                                        {
+                                                                            $filter: {
+                                                                                input: "$responseUsers",
+                                                                                cond: { $eq: ["$$this._id", "$$response.user"] }
+                                                                            }
+                                                                        },
+                                                                        0
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        commentUsers: 0,
+                        responseUsers: 0,
+                        "comments.user.password": 0,
+                        "comments.responses.user.password": 0
                     }
                 }
             ])

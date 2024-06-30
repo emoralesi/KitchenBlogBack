@@ -1,20 +1,20 @@
-import express from 'express'
-import { getUserbyEmail, getUserbyUsename, obtenerFavouriteByIdUser, saveUser } from '../dao/UserDao.js';
-import { body, validationResult } from 'express-validator';
-import { LoginUser, UserRegister, getUserDescubrir, saveUpdateFavourite } from '../services/UserService.js';
-import { GetFullRecetaById, GetRecetasByIdUser, guardarReceta } from '../services/RecetaService.js';
-import { authMiddleware } from '../auth/Middleware.js';
-import { guardarComment } from '../services/CommentService.js';
+import express from 'express';
 import SSE from 'express-sse';
-import { obtenerNotificationes } from '../services/NotificationService.js';
-import { getIngrediente, saveIngrediente } from '../dao/IngredienteDao.js';
-import { getMedida, saveMedida } from '../dao/MedidaDao.js';
-import { saveItem } from '../dao/ItemDao.js';
-import { saveGrupoIngrediente } from '../dao/GrupoIngredienteDao.js';
-import { getDificultad, saveDificultad } from '../dao/DificultadDao.js';
+import { body, validationResult } from 'express-validator';
+import { authMiddleware } from '../auth/Middleware.js';
 import { getCategoria, saveCategoria } from '../dao/CategoriaDao.js';
-import { getUtencilios, saveUtencilio } from '../dao/UtencilioDao.js';
+import { getDificultad, saveDificultad } from '../dao/DificultadDao.js';
+import { saveGrupoIngrediente } from '../dao/GrupoIngredienteDao.js';
+import { getIngrediente, saveIngrediente } from '../dao/IngredienteDao.js';
+import { saveItem } from '../dao/ItemDao.js';
+import { getMedida, saveMedida } from '../dao/MedidaDao.js';
 import { getSubCategoria, saveSubCategoria } from '../dao/SubCategoriaDao.js';
+import { getUserbyId, getUserbyUsename, obtenerFavouriteByIdUser } from '../dao/UserDao.js';
+import { getUtencilios, saveUtencilio } from '../dao/UtencilioDao.js';
+import { guardarComment, saveUpdateReactionComment } from '../services/CommentService.js';
+import { obtenerNotificationes } from '../services/NotificationService.js';
+import { GetFullRecetaById, GetRecetasByIdUser, guardarReceta, saveUpdateReactionReceta } from '../services/RecetaService.js';
+import { LoginUser, UserRegister, getUserDescubrir, saveUpdateFavourite } from '../services/UserService.js';
 
 const app = express();
 const sse = new SSE();
@@ -355,12 +355,40 @@ app.post('/obtenerIdUsuarioByUserName', authMiddleware, async (req, res) => {
     }
 })
 
+app.post('/obtenerIdFavourites', authMiddleware, async (req, res) => {
+    try {
+        const Usuario = await getUserbyId(req.body.idUser);
+        res.status(200).json({ status: 'ok', favourites: Usuario.favourite })
+    } catch (error) {
+        console.error('Error al obtener Dificultades: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Dificultades' });
+    }
+})
+
 app.post('/saveUpdateFavourite', authMiddleware, async (req, res) => {
     try {
         await saveUpdateFavourite(req.body, res);
     } catch (error) {
         console.error('Error al guardar o remover favourite: ', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al guardar o remover favourite' });
+    }
+})
+
+app.post('/saveUpdateRecetaReaction', authMiddleware, async (req, res) => {
+    try {
+        await saveUpdateReactionReceta(req.body, res);
+    } catch (error) {
+        console.error('Error al guardar o remover reaction: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al guardar o remover reaction' });
+    }
+})
+
+app.post('/saveUpdateCommentReaction', authMiddleware, async (req, res) => {
+    try {
+        await saveUpdateReactionComment(req.body, res);
+    } catch (error) {
+        console.error('Error al guardar o remover reaction: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al guardar o remover reaction' });
     }
 })
 

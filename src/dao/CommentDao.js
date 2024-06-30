@@ -10,6 +10,20 @@ export const saveComment = async (comment) => {
     }
 }
 
+export const updateCommentReaction = async (idComment, update) => {
+    try {
+        const updateReaction = await Comment.findByIdAndUpdate(
+            idComment,
+            update
+        );
+        return updateReaction
+    } catch (error) {
+        console.log(error);
+    }
+
+    return updatedUser;
+}
+
 export const getRecetaUserIdByComment = async (id) => {
     const idComment = new ObjectId(id);
     try {

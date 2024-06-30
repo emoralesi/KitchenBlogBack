@@ -5,6 +5,7 @@ const notificationSchema = new mongoose.Schema({
   user_notificated: { type: Schema.Types.ObjectId, ref: 'User' },
   user_action: { type: Schema.Types.ObjectId, ref: 'User' },
   reference_id: { type: Schema.Types.ObjectId }, // referenciaModelo es un campo virtual que se utilizará para determinar si la referencia es para un Receta o un Comentario
+  receta_id: { type: Schema.Types.ObjectId, ref: 'Receta' },
   referenceModelo: {
     type: String,
     enum: ['Reaction', 'Comentario']

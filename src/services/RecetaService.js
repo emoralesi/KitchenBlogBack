@@ -1,7 +1,7 @@
 import { saveGrupoIngrediente } from "../dao/GrupoIngredienteDao.js";
 import { saveItem } from "../dao/ItemDao.js";
 import { savePasos } from "../dao/PasosDao.js";
-import { getRecetaComentReactions, saveReceta } from "../dao/RecetaDao.js";
+import { getRecetaComentReactions, saveReceta, updateRecetaReaction } from "../dao/RecetaDao.js";
 import { obtenerRecetaByIdUser } from "../dao/UserDao.js";
 import mongoose from 'mongoose';
 
@@ -35,6 +35,32 @@ export const GetFullRecetaById = async (params, res) => {
     } catch (error) {
         console.error('Error al obtener usuarios Recetas:', error);
         return res.status(500).json({ message: 'Error interno del servidor al obtener Recetas usuarios' });
+    }
+}
+
+export const saveUpdateReactionReceta = async (params, res) => {
+    try {
+        let update;
+        console.log(params);
+        if (params.estado == true) {
+            // Add to favourites
+            update = { $addToSet: { reactions: params.idUser } }; // $addToSet prevents duplicates
+        } else if (params.estado == false) {
+            // Remove from favourites
+            update = { $pull: { reactions: params.idUser } };
+        } else {
+            return res.status(400).send({ status: 'warning', message: "Invalid status value. Use 'true' or 'false'." });
+        }
+
+        const result = await updateRecetaReaction(params.idReceta, update);
+
+        if (!result) {
+            return res.status(404).send({ status: 'warning', message: "User not found" });
+        }
+
+        res.status(200).send({ status: 200, message: 'suceed' });
+    } catch (error) {
+        res.status(500).send({ status: 'error', message: error.message });
     }
 }
 

@@ -1,4 +1,4 @@
-import { getCommentOwnerByParentComment, getCommentUserIdByComment, getRecetaUserIdByComment, saveComment } from "../dao/CommentDao.js";
+import { getCommentOwnerByParentComment, getCommentUserIdByComment, getRecetaUserIdByComment, saveComment, updateCommentReaction } from "../dao/CommentDao.js";
 import { TypeNotification, TypeReferenceModelo } from "../utils/enumTypeNoti.js";
 import { sendNotification } from "../utils/notificationSend.js";
 
@@ -9,7 +9,7 @@ export const guardarComment = async (params, res) => {
         const comment = {
             content: params.content,
             user: params.user,
-            receta: params.receta,
+            receta_id: params.receta,
             reactions: params?.reactions,
             parentComment: params?.parentComment
         };
@@ -41,6 +41,7 @@ export const guardarComment = async (params, res) => {
                         user_notificated: ownerComment[0].user.toString(),
                         user_action: params.user,
                         reference_id: idComment,
+                        receta: params.receta,
                         referenceModelo: TypeReferenceModelo.Comentario,
                         action: action_noti
 
@@ -53,6 +54,7 @@ export const guardarComment = async (params, res) => {
                             user_notificated: value,
                             user_action: params.user,
                             reference_id: idComment,
+                            receta: params.receta,
                             referenceModelo: TypeReferenceModelo.Comentario,
                             action: action_noti
 
@@ -70,6 +72,7 @@ export const guardarComment = async (params, res) => {
                             user_notificated: value,
                             user_action: params.user,
                             reference_id: idComment,
+                            receta: params.receta,
                             referenceModelo: TypeReferenceModelo.Comentario,
                             action: action_noti
 
@@ -77,11 +80,6 @@ export const guardarComment = async (params, res) => {
                     }
                 })
             }
-
-            // END
-
-
-
 
         } catch (error) {
             console.error(error);
@@ -92,5 +90,34 @@ export const guardarComment = async (params, res) => {
     } catch (error) {
         console.error('Error al registrar comentario:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar comentario' });
+    }
+}
+
+export const saveUpdateReactionComment = async (params, res) => {
+    try {
+        let update;
+        if (params.estado == true) {
+            // Add to favourites
+            update = { $addToSet: { reactions: params.idUser } }; // $addToSet prevents duplicates
+        } else if (params.estado == false) {
+            // Remove from favourites
+            update = { $pull: { reactions: params.idUser } };
+        } else {
+            return res.status(400).send({ status: 'warning', message: "Invalid status value. Use 'true' or 'false'." });
+        }
+
+        const result = await updateCommentReaction(params.idComment, update);
+
+        if (!result) {
+            return res.status(404).send({ status: 'warning', message: "Comment not found" });
+        }
+
+        if (params.estado == true) {
+            //
+        }
+
+        res.status(200).send({ status: 200, message: 'suceed' });
+    } catch (error) {
+        res.status(500).send({ status: 'error', message: error.message });
     }
 }
