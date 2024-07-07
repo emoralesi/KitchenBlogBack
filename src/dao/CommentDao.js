@@ -10,6 +10,21 @@ export const saveComment = async (comment) => {
     }
 }
 
+export const getAnswerdOfComment = async (parentComment) => {
+    const idComment = new ObjectId(parentComment);
+
+    try {
+        const comments = Comment.aggregate([
+            {
+                $match: { parentComment: idComment }
+            }
+        ])
+        return comments
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const updateCommentReaction = async (idComment, update) => {
     try {
         const updateReaction = await Comment.findByIdAndUpdate(
@@ -27,7 +42,7 @@ export const updateCommentReaction = async (idComment, update) => {
 export const getRecetaUserIdByComment = async (id) => {
     const idComment = new ObjectId(id);
     try {
-        const UserId = Comment.aggregate(
+        const UserId = await Comment.aggregate(
             [
                 {
                     $match: {
@@ -55,7 +70,7 @@ export const getCommentUserIdByComment = async (id) => {
     const idComment = new ObjectId(id);
 
     try {
-        const UserId = Comment.aggregate(
+        const UserId = await Comment.aggregate(
             [
                 {
                     $match: {
@@ -87,11 +102,31 @@ export const getCommentUserIdByComment = async (id) => {
     }
 }
 
+export const getCommentById = async (id) => {
+    const idComment = new ObjectId(id);
+
+    try {
+        const comment = await Comment.aggregate(
+            [
+                {
+                    $match: {
+                        _id: idComment
+                    }
+                }
+            ]
+        );
+        console.log("comment by id", comment);
+        return comment;
+    } catch (error) {
+        throw error
+    }
+}
+
 export const getCommentOwnerByParentComment = async (id) => {
     const idComment = new ObjectId(id);
 
     try {
-        const UserId = Comment.aggregate(
+        const UserId = await Comment.aggregate(
             [
                 {
                     $match: {

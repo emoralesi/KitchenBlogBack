@@ -19,7 +19,7 @@ const recetaSchema = new mongoose.Schema({
   utencilio: [{ type: Schema.Types.ObjectId, ref: 'Utencilio' }],
   subCategoria: [{ type: Schema.Types.ObjectId, ref: 'SubCategoria' }],
   user: { type: Schema.Types.ObjectId, ref: 'Usuario' },
-  reactions: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  reactions: [{ type: Schema.Types.ObjectId, ref: 'Reaction' }],
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   pasos: [{ type: Schema.Types.ObjectId, ref: 'Pasos' }],
   user: { type: Schema.Types.ObjectId, ref: 'Usuario' },

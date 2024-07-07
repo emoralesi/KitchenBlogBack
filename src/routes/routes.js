@@ -21,7 +21,7 @@ const sse = new SSE();
 
 const connections = new Map();
 
-function sendSSEToUser(userId, eventData) {
+export function sendSSEToUser(userId, eventData) {
     // Encuentra la conexión del usuario
     console.log("mi user id notificado", userId);
     const userConnections = connections.get(userId.toString());
@@ -155,39 +155,9 @@ app.post('/saveComentario', authMiddleware, async (req, res) => {
     try {
 
         const result = await guardarComment(req.body, res);
+        sendSSEToUser
 
-        // MEJORAR LOGICA PARA DECIRIR A QUIEN ENVIAR LA NOTIFICACION
-        // let eventData = {
-        //     user: result.newComment.user.toString(),
-        //     data: result.newComment,
-        //     Notification: result.notification
-        // }
-        console.log(result);
-        try {
-            if (req.body.parentComment) {
-                if (result.newComment.user.toString() !== result.ownerComment[0].user.toString()) {
-                    console.log("caso 1");
-                    sendSSEToUser(result.ownerComment[0].user.toString(), result);
-                }
-
-                result.userId.map((value) => {
-                    if ((value !== result.ownerComment[0].user.toString()) && value !== result.newComment.user.toString()) {
-                        console.log("caso 2");
-                        sendSSEToUser(value, result);
-                    }
-                })
-            } else {
-                if (result.userId[0] !== result.newComment.user.toString()) {
-                    console.log("caso 3");
-                    sendSSEToUser(result.userId[0], result);
-                }
-            }
-            //sse.emit(result.userId, result.notification?.action, { message: `enviando notificacion` });
-        } catch (error) {
-            console.error(error);
-        }
-
-        res.status(200).json({ status: 'ok', comment: result, message: 'Comentario registrado con éxito' });
+        res.status(200).json({ status: 'ok', comment: result.comment, message: 'Comentario registrado con éxito' });
 
     } catch (error) {
         console.error('Error al reaccionar:', error);

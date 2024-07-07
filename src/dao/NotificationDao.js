@@ -11,6 +11,14 @@ export const saveNotification = async (notification) => {
     }
 }
 
+export const deleteNotification = async (idUser, idReceta, idReference, modelo) => {
+    try {
+        const notification = await Notification.deleteMany({ user_action: idUser, receta_id: idReceta, reference_id: idReference, referenceModelo: modelo })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getNotifications = async (idUser) => {
 
     try {
@@ -42,53 +50,11 @@ export const getNotifications = async (idUser) => {
                 }
             },
             {
-                $addFields: {
-                    item: {
-                        $cond: {
-                            if: {
-                                $gt: [
-                                    {
-                                        $size: "$comment"
-                                    },
-                                    0
-                                ]
-                            },
-                            then: {
-                                type: "Comentario",
-                                recetaId: "$comment.receta"
-                            },
-                            else: {
-                                type: "Reaction",
-                                recetaId: "$reaction.receta"
-                            }
-                        }
-                    }
-                }
-            },
-            {
                 $lookup: {
                     from: "recetas",
-                    localField: "item.recetaId",
+                    localField: "receta_id",
                     foreignField: "_id",
-                    as: "item.RecetaInfo"
-                }
-            },
-            {
-                $addFields: {
-                    "comment.parentComment": {
-                        $cond: {
-                            if: {
-                                $isArray: "$comment.parentComment"
-                            },
-                            then: {
-                                $arrayElemAt: [
-                                    "$comment.parentComment",
-                                    0
-                                ]
-                            },
-                            else: null
-                        }
-                    }
+                    as: "receta"
                 }
             },
             {
@@ -97,6 +63,37 @@ export const getNotifications = async (idUser) => {
                     localField: "comment.parentComment",
                     foreignField: "_id",
                     as: "parentComment"
+                }
+            },
+            {
+                $lookup: {
+                    from: "usuarios",
+                    localField: "user_action",
+                    foreignField: "_id",
+                    as: "user_action"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$parentComment",
+                    preserveNullAndEmptyArrays: true
+                }
+            }
+            ,
+            {
+                $lookup: {
+                    from: "usuarios",
+                    localField: "parentComment.user",
+                    foreignField: "_id",
+                    as: "parentComment.user"
+                }
+            },
+            {
+                $project: {
+                    "user_action.password": 0,
+                    "user_action.favourite": 0,
+                    "parentComment.user.password": 0,
+                    "parentComment.user.favourite": 0
                 }
             }
         ]);

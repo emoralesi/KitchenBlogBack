@@ -1,9 +1,14 @@
 import { saveGrupoIngrediente } from "../dao/GrupoIngredienteDao.js";
 import { saveItem } from "../dao/ItemDao.js";
 import { savePasos } from "../dao/PasosDao.js";
-import { getRecetaComentReactions, saveReceta, updateRecetaReaction } from "../dao/RecetaDao.js";
-import { obtenerRecetaByIdUser } from "../dao/UserDao.js";
+import { getRecetaById, getRecetaComentReactions, saveReceta, updateRecetaReaction } from "../dao/RecetaDao.js";
+import { getUserbyId, obtenerRecetaByIdUser } from "../dao/UserDao.js";
 import mongoose from 'mongoose';
+import { TypeNotification, TypeReferenceModelo } from "../utils/enumTypeNoti.js";
+import { sendNotification } from "../utils/notificationSend.js";
+import { sendSSEToUser } from "../routes/routes.js";
+import { deleteReaction, getReactionByReceta, saveReaction } from "../dao/ReactionDao.js";
+import { deleteNotification } from "../dao/NotificationDao.js";
 
 export const GetRecetasByIdUser = async (params, res) => {
     console.log(params);
@@ -42,24 +47,77 @@ export const saveUpdateReactionReceta = async (params, res) => {
     try {
         let update;
         console.log(params);
+        var findReaction;
+        var saveReactionResult;
         if (params.estado == true) {
-            // Add to favourites
-            update = { $addToSet: { reactions: params.idUser } }; // $addToSet prevents duplicates
+
+            saveReactionResult = await saveReaction({
+                user_id: params.idUser,
+                referencia_id: params.idReceta,
+                referenciaModelo: 'Receta'
+            });
+
+            update = { $addToSet: { reactions: saveReactionResult._id } }; // $addToSet prevents duplicates
+
         } else if (params.estado == false) {
-            // Remove from favourites
-            update = { $pull: { reactions: params.idUser } };
+
+            findReaction = await getReactionByReceta(params.idUser, params.idReceta)
+
+            update = { $pull: { reactions: findReaction[0]._id.toString() } };
         } else {
             return res.status(400).send({ status: 'warning', message: "Invalid status value. Use 'true' or 'false'." });
         }
 
-        const result = await updateRecetaReaction(params.idReceta, update);
+        const reactionNew = await updateRecetaReaction(params.idReceta, update);
 
-        if (!result) {
+        if (!reactionNew) {
             return res.status(404).send({ status: 'warning', message: "User not found" });
+        }
+
+        if (params.estado == false) {
+            console.log(params.idUser);
+            console.log(params.idReceta);
+            console.log(findReaction[0]._id.toString());
+            await deleteNotification(params.idUser, params.idReceta, findReaction[0]._id.toString(), 'Reaction');
+            await deleteReaction(findReaction[0]._id.toString())
+        }
+        console.log("mi reactionNew", reactionNew);
+
+        const userAction = await getUserbyId(params.idUser);
+
+        console.log("userAction", userAction);
+
+        const recetaNoti = await getRecetaById(params.idReceta);
+
+        console.log("recetaNoti", recetaNoti);
+
+        const result = { reaction: reactionNew, user: userAction, receta: recetaNoti, action_noti: params.type }
+
+        console.log("mi result", result);
+
+        console.log(params.estado);
+        console.log(params.estado == true);
+        if (params.estado == true) {
+            console.log(params.idUser);
+            console.log(recetaNoti.user.toString())
+            console.log(params.idUser !== recetaNoti.user.toString());
+            if (params.idUser !== recetaNoti.user.toString()) {
+                await sendNotification({
+                    user_notificated: recetaNoti.user.toString(),
+                    user_action: params.idUser,
+                    reference_id: saveReactionResult._id.toString(),
+                    receta_id: params.idReceta,
+                    referenceModelo: TypeReferenceModelo.Reaction,
+                    action: TypeNotification.LikeToReceta
+                })
+                console.log("mi notificado : ", recetaNoti.user.toString());
+                sendSSEToUser(recetaNoti.user.toString(), result)
+            }
         }
 
         res.status(200).send({ status: 200, message: 'suceed' });
     } catch (error) {
+        console.log(error);
         res.status(500).send({ status: 'error', message: error.message });
     }
 }
