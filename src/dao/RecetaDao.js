@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import Receta from '../models/RecetaModel.js';
+import Receta from '../models/recetaModel.js';
 
 export const saveReceta = async (receta) => {
     try {
@@ -70,7 +70,8 @@ export const getRecetaComentReactions = async (idReceta) => {
                 },
                 {
                     $unwind: {
-                        path: "$comments"
+                        path: "$comments",
+                        preserveNullAndEmptyArrays: true
                     }
                 },
                 {
@@ -267,6 +268,100 @@ export const getRecetaComentReactions = async (idReceta) => {
             ])
     } catch (error) {
         throw error;
+    }
+}
+
+export const obtenerShopping = async (idRecetas) => {
+
+    idRecetas.forEach((element, index, arr) => {
+        arr[index] = new ObjectId(element);
+    });
+
+    console.log("mi idReceta", idRecetas);
+
+    try {
+        const shopping = Receta.aggregate([
+            {
+                $match: {
+                    _id: {
+                        $in: idRecetas
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "grupoingredientes",
+                    localField: "grupoIngrediente",
+                    foreignField: "_id",
+                    as: "grupoIngrediente"
+                }
+            },
+            {
+                $unwind: "$grupoIngrediente"
+            },
+            {
+                $lookup: {
+                    from: "items",
+                    localField: "grupoIngrediente.item",
+                    foreignField: "_id",
+                    as: "grupoIngrediente.items"
+                }
+            },
+            {
+                $unwind: "$grupoIngrediente.items"
+            },
+            {
+                $lookup: {
+                    from: "medidas",
+                    localField: "grupoIngrediente.items.medida",
+                    foreignField: "_id",
+                    as: "grupoIngrediente.items.medida"
+                }
+            },
+            {
+                $unwind: "$grupoIngrediente.items.medida"
+            },
+            {
+                $lookup: {
+                    from: "ingredientes",
+                    localField:
+                        "grupoIngrediente.items.ingrediente",
+                    foreignField: "_id",
+                    as: "grupoIngrediente.items.ingrediente"
+                }
+            },
+            {
+                $unwind: "$grupoIngrediente.items.ingrediente"
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    titulo: {
+                        $first: "$titulo"
+                    },
+                    // Agregar el campo titulo
+                    grupoIngrediente: {
+                        $first: "$grupoIngrediente"
+                    },
+                    items: {
+                        $push: "$grupoIngrediente.items"
+                    }
+                }
+            },
+            {
+                $project: {
+                    titulo: 1,
+                    // Incluir el campo titulo en la proyección
+                    "grupoIngrediente.items": "$items"
+                }
+            }
+        ])
+
+        return shopping;
+    } catch (error) {
+        console.log(error);
+        throw error;
+
     }
 }
 

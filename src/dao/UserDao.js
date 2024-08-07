@@ -22,6 +22,7 @@ export const getUserbyUsename = async (userName) => {
     try {
         return await Usuario.findOne({ username: userName.toLowerCase() });
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }

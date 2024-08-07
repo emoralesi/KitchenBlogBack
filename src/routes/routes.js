@@ -15,6 +15,8 @@ import { guardarComment, saveUpdateReactionComment } from '../services/CommentSe
 import { obtenerNotificationes } from '../services/NotificationService.js';
 import { GetFullRecetaById, GetRecetasByIdUser, guardarReceta, saveUpdateReactionReceta } from '../services/RecetaService.js';
 import { LoginUser, UserRegister, getUserDescubrir, saveUpdateFavourite } from '../services/UserService.js';
+import { obtenerShopping } from '../dao/RecetaDao.js';
+import { sendEmail } from '../utils/sendEmail.js';
 
 const app = express();
 const sse = new SSE();
@@ -318,6 +320,7 @@ app.get('/obtenerDificultades', authMiddleware, async (req, res) => {
 app.post('/obtenerIdUsuarioByUserName', authMiddleware, async (req, res) => {
     try {
         const Usuario = await getUserbyUsename(req.body.username);
+        console.log("mi usuario", Usuario);
         res.status(200).json({ status: 'ok', userId: Usuario._id })
     } catch (error) {
         console.error('Error al obtener Dificultades: ', error);
@@ -369,6 +372,28 @@ app.post('/obtenerFavourite', authMiddleware, async (req, res) => {
     } catch (error) {
         console.error('Error al obtener favourite: ', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener favourite' });
+    }
+})
+
+app.post('/obtenerShopping', authMiddleware, async (req, res) => {
+    try {
+        const Shopping = await obtenerShopping(req.body.idRecetas);
+        console.log("mi shopping", Shopping);
+
+        res.status(200).json({ status: 'ok', data: Shopping })
+    } catch (error) {
+        console.error('Error al obtener shopping: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener shopping' });
+    }
+})
+
+app.post('/sendEmailShopping', async (req, res) => {
+    try {
+        const data = await sendEmail();
+        res.status(200).json({ status: 'ok', data: data })
+    } catch (error) {
+        console.error('Error al obtener shopping: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener shopping' });
     }
 })
 
