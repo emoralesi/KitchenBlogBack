@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 const reactionSchema = new mongoose.Schema({
     pasoNumero: { type: Number },
     descripcion: { type: String },
-    images: []
+    imageStep: []
 });
 
 const Pasos = mongoose.model('Pasos', reactionSchema);

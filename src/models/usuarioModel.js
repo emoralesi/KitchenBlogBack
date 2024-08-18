@@ -5,6 +5,7 @@ const usuarioSchema = new mongoose.Schema({
     username: { type: String, unique: true, require: true },
     favourite: [{ type: Schema.Types.ObjectId, ref: 'Receta' }],
     password: { type: String, unique: true, require: true },
+    profileImageUrl: { type: String }
 });
 
 const Usuario = mongoose.model('Usuario', usuarioSchema);

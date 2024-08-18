@@ -23,10 +23,12 @@ const recetaSchema = new mongoose.Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   pasos: [{ type: Schema.Types.ObjectId, ref: 'Pasos' }],
   user: { type: Schema.Types.ObjectId, ref: 'Usuario' },
+  pined: Boolean,
   fechaReceta: {
     type: Date,
     default: Date.now
-  }
+  },
+  active: Boolean
 });
 
 // Método para obtener la duración formateada

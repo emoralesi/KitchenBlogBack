@@ -1,7 +1,7 @@
-import { saveGrupoIngrediente } from "../dao/GrupoIngredienteDao.js";
-import { saveItem } from "../dao/ItemDao.js";
-import { savePasos } from "../dao/PasosDao.js";
-import { getRecetaById, getRecetaComentReactions, saveReceta, updateRecetaReaction } from "../dao/RecetaDao.js";
+import { obtenerGrupoIngrediente, saveGrupoIngrediente, updateGrupoIngrediente } from "../dao/GrupoIngredienteDao.js";
+import { obtenerItem, saveItem, updateItem } from "../dao/ItemDao.js";
+import { buscarPaso, savePasos, updatePaso } from "../dao/PasosDao.js";
+import { getRecetaById, getRecetaComentReactions, saveReceta, updateReceta, updateRecetaReaction } from "../dao/RecetaDao.js";
 import { getUserbyId, obtenerRecetaByIdUser } from "../dao/UserDao.js";
 import mongoose from 'mongoose';
 import { TypeNotification, TypeReferenceModelo } from "../utils/enumTypeNoti.js";
@@ -9,6 +9,8 @@ import { sendNotification } from "../utils/notificationSend.js";
 import { sendSSEToUser } from "../routes/routes.js";
 import { deleteReaction, getReactionByReceta, saveReaction } from "../dao/ReactionDao.js";
 import { deleteNotification } from "../dao/NotificationDao.js";
+import { compareRecetas } from "../utils/compareReceta.js";
+import path from 'path'
 
 export const GetRecetasByIdUser = async (params, res) => {
     console.log(params);
@@ -19,11 +21,11 @@ export const GetRecetasByIdUser = async (params, res) => {
         if (Recetas[0]?.recetas?.length > 0) {
             res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas[0].recetas.length + ' Recetas', Recetas: Recetas[0].recetas });
         } else {
-            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Recetas: Recetas[0]?.recetas });
+            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Recetas: [] });
         }
     } catch (error) {
         console.error('Error al obtener usuarios Recetas:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al obtener Recetas usuarios' });
+        return res.status(500).json({ message: 'Error interno del servidor al obtener Recetas usuarios', Recetas: null });
     }
 }
 
@@ -35,11 +37,11 @@ export const GetFullRecetaById = async (params, res) => {
         if (Recetas.length > 0) {
             res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas.length + ' Receta', Receta: Recetas[0] });
         } else {
-            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas' });
+            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Receta: [] });
         }
     } catch (error) {
         console.error('Error al obtener usuarios Recetas:', error);
-        return res.status(500).json({ message: 'Error interno del servidor al obtener Recetas usuarios' });
+        return res.status(500).json({ message: 'Error interno del servidor al obtener Recetas usuarios', Receta: null });
     }
 }
 
@@ -122,7 +124,84 @@ export const saveUpdateReactionReceta = async (params, res) => {
     }
 }
 
-export const guardarReceta = async (params, res) => {
+export const guardarReceta = async (params, res, imageRecipes, imageSteps, cloudinary) => {
+
+    let uploadedRecipeImages = []
+
+    for (const file of imageRecipes) {
+        console.log("Desgloce ----");
+
+        const optimizedUrl = await cloudinary.uploader.upload(file.path, {
+            folder: 'Recipe_images',
+            format: 'png',
+            fetch_format: 'auto',
+            quality: 'auto',
+            asset_folder: 'Recipe_images'
+        });
+        uploadedRecipeImages.push(optimizedUrl.url);  // Agrega la URL de la imagen subida
+    }
+
+    console.log("pase bien");
+
+    params.images = uploadedRecipeImages;;
+
+    params.pined = false;
+    params.active = true;
+
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
+    console.log("mi params", params);
+    try {
+        var gruposId = [];
+        for (const values of params.grupoIngrediente) {
+
+            var items = [];
+            for (const valueItems of values.items) {
+                const result = await saveItem({ valor: valueItems.valor, ingrediente: valueItems.idIngrediente, medida: valueItems.idMedida });
+                items.push(result._id);
+            }
+            const resultGrupo = await saveGrupoIngrediente({ nombreGrupo: values.nombreGrupo, item: items });
+            gruposId.push(resultGrupo._id);
+            items = [];
+        }
+        params.grupoIngrediente = gruposId;
+
+        var pasosId = [];
+        params.pasos.forEach(async (values, index) => {
+            var optimizedUrl = null;
+
+            if (imageSteps) {
+                optimizedUrl = await cloudinary.uploader.upload(imageSteps[index].path, {
+                    folder: 'Steps_images',
+                    format: 'png',
+                    fetch_format: 'auto',
+                    quality: 'auto',
+                    asset_folder: 'Steps_images'
+                });
+            }
+
+            values.imageStep = optimizedUrl ? optimizedUrl.url : null;
+            const resultPasos = await savePasos(values);
+            pasosId.push(resultPasos._id);
+        });
+        params.pasos = pasosId;
+
+        const newReceta = await saveReceta(params);
+
+        //await session.commitTransaction();
+        //session.endSession();
+
+        return res.status(200).json({ status: 'ok', receta: newReceta, message: 'Receta registrada con éxito' });
+
+    } catch (error) {
+        // await session.abortTransaction();
+        //session.endSession();
+        console.error('Error al registrar Receta:', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar receta' });
+    }
+}
+
+export const actualizarReceta = async (params, res) => {
 
     params.images = ['https://via.placeholder.com/400'];
 
@@ -133,24 +212,77 @@ export const guardarReceta = async (params, res) => {
         var gruposId = [];
         for (const values of params.grupoIngrediente) {
             var items = [];
-            for (const valueItems of values.items) {
-                const result = await saveItem({ valor: valueItems.valor, ingrediente: valueItems.idIngrediente, medida: valueItems.idMedida }, { session });
-                items.push(result._id);
+
+            if (values._id) {
+
+                const originalGrupoIngrediente = await obtenerGrupoIngrediente(values._id);
+
+                gruposId.push(values._id);
+                var enableUpdate = false;
+
+                for (const valueItems of values.items) {
+
+                    if (valueItems._id) {
+
+                        items.push(valueItems._id)
+
+                        const originalItem = await obtenerItem(valueItems._id);
+                        if (valueItems.valor !== originalItem.valor || valueItems.idIngrediente !== originalItem.ingrediente.toString() || valueItems.idMedida !== originalItem.medida.toString()) {
+                            await updateItem({ _id: valueItems._id, valor: valueItems.valor, ingrediente: valueItems.idIngrediente, medida: valueItems.idMedida })
+                        }
+                    } else {
+                        const result = await saveItem({ valor: valueItems.valor, ingrediente: valueItems.idIngrediente, medida: valueItems.idMedida });
+                        items.push(result._id.toString());
+                        enableUpdate = true;
+                    }
+                }
+
+                if (enableUpdate || originalGrupoIngrediente !== values) {
+                    updateGrupoIngrediente({ _id: values._id, nombreGrupo: values.nombreGrupo, item: items });
+                }
+
+            } else {
+
+                for (const valueItems of values.items) {
+                    const result = await saveItem({ valor: valueItems.valor, ingrediente: valueItems.idIngrediente, medida: valueItems.idMedida });
+                    items.push(result._id.toString());
+                }
+                const resultGrupo = await saveGrupoIngrediente({ nombreGrupo: values.nombreGrupo, item: items });
+                gruposId.push(resultGrupo._id.toString());
+                items = [];
             }
-            const resultGrupo = await saveGrupoIngrediente({ nombreGrupo: values.nombreGrupo, item: items }, { session });
-            gruposId.push(resultGrupo._id);
-            items = [];
         }
         params.grupoIngrediente = gruposId;
 
         var pasosId = [];
         for (const values of params.pasos) {
-            const resultPasos = await savePasos(values, { session });
-            pasosId.push(resultPasos._id);
+            if (values._id) {
+                pasosId.push(values._id);
+
+                const originalPasos = await buscarPaso(values._id);
+
+                if (values.pasoNumero !== originalPasos.pasoNumero || values.descripcion !== originalPasos.descripcion) {
+                    updatePaso({ _id: values._id, pasoNumero: values.pasoNumero, descripcion: values.descripcion });
+                }
+
+            } else {
+                const resultPasos = await savePasos(values);
+                pasosId.push(resultPasos._id.toString());
+            }
+
         }
         params.pasos = pasosId;
 
-        const newReceta = await saveReceta(params, { session });
+        const originalReceta = await getRecetaById(params._id)
+
+        console.log(originalReceta);
+        console.log(params);
+
+        var newReceta = null;
+
+        if (!compareRecetas(params, originalReceta)) {
+            newReceta = await updateReceta(params);
+        }
 
         await session.commitTransaction();
         session.endSession();
@@ -160,7 +292,7 @@ export const guardarReceta = async (params, res) => {
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
-        console.error('Error al registrar Receta:', error);
-        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar usuario' });
+        console.error('Error al actualizar Receta:', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al actualizar receta' });
     }
 }

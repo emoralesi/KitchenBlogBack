@@ -20,7 +20,7 @@ export const getUserbyId = async (idUser) => {
 export const getUserbyUsename = async (userName) => {
     console.log("mi userName", userName);
     try {
-        return await Usuario.findOne({ username: userName.toLowerCase() });
+        return await Usuario.findOne({ username: userName.toLowerCase() }, { username: 1, email: 1, _id: 1, profileImageUrl: 1 })
     } catch (error) {
         console.log(error);
         throw error;
@@ -60,6 +60,11 @@ export const obtenerFavouriteByIdUser = async (idUser) => {
                 $unwind: {
                     path: "$favourite",
                     preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    "favourite.active": true
                 }
             },
             {
@@ -103,7 +108,94 @@ export const obtenerFavouriteByIdUser = async (idUser) => {
                     isFavouriteEmpty: 0
                 }
             }
-        ]); // Execute the aggregation query
+        ]);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const obtenerDatosRecAndFav = async (idUser) => {
+    console.log("mi idUser desde dao", idUser);
+    const userId = new ObjectId(idUser);
+    try {
+        return await Usuario.aggregate([
+            {
+                $match: {
+                    _id: userId
+                }
+            },
+            {
+                $addFields: {
+                    isFavouriteEmpty: {
+                        $cond: {
+                            if: {
+                                $eq: ["$favourite", []]
+                            },
+                            then: true,
+                            else: false
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "recetas",
+                    let: { favouriteIds: "$favourite" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $in: ["$_id", "$$favouriteIds"] },
+                                        { $eq: ["$active", true] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: "favourite"
+                }
+            },
+            {
+                $addFields: {
+                    favouriteCount: {
+                        $size: "$favourite"
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "recetas",
+                    let: { userId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ["$user", "$$userId"] },
+                                        { $eq: ["$active", true] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: "recetas"
+                }
+            },
+            {
+                $addFields: {
+                    recetaCount: {
+                        $size: "$recetas"
+                    }
+                }
+            },
+            {
+                $project: {
+                    favouriteCount: 1,
+                    recetaCount: 1
+                }
+            }
+        ]);
     } catch (error) {
         throw error;
     }
@@ -134,8 +226,19 @@ export const obtenerRecetaByIdUser = async (idUser) => {
                     foreignField: "user",
                     as: "recetas"
                 }
+            },
+            {
+                $addFields: {
+                    recetas: {
+                        $filter: {
+                            input: "$recetas",
+                            as: "receta",
+                            cond: { $eq: ["$$receta.active", true] }
+                        }
+                    }
+                }
             }
-        ]); // Execute the aggregation query
+        ])
     } catch (error) {
         throw error;
     }
@@ -145,7 +248,8 @@ export const updateFavourite = async (idUser, update) => {
     try {
         const updatedUser = await Usuario.findByIdAndUpdate(
             idUser,
-            update
+            update,
+            { new: true }
         );
         return updatedUser
     } catch (error) {

@@ -90,7 +90,7 @@ export const saveUpdateFavourite = async (params, res) => {
             return res.status(404).send({ status: 'warning', message: "User not found" });
         }
 
-        res.status(200).send({ status: 200, message: 'suceed' });
+        res.status(200).send({ status: 200, message: 'suceed', cantidadFavourite: result.favourite.length });
     } catch (error) {
         res.status(500).send({ status: 'error', message: error.message });
     }

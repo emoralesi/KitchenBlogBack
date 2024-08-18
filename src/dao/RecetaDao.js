@@ -10,11 +10,32 @@ export const saveReceta = async (receta) => {
     }
 }
 
-export const getUserByRecetaId = async (id) => {
+export const updateReceta = async (receta) => {
     try {
-
+        const recetas = await Receta.findByIdAndUpdate(receta._id, receta, { new: true }).lean();
+        return recetas;
     } catch (error) {
-        throw error
+
+    }
+}
+
+export const actualizarPined = async (datos) => {
+    try {
+        const resultado = await Receta.findByIdAndUpdate(datos.id, { pined: datos.action }, { new: true, fields: { pined: 1 } })
+        return resultado
+    } catch (error) {
+        console.log(error);
+        throw new error;
+    }
+}
+
+export const desactivateRecipe = async (id) => {
+    try {
+        const resultado = await Receta.findByIdAndUpdate(id, { active: false }, { new: true, fields: { active: 1 } })
+        return resultado
+    } catch (error) {
+        console.log(error);
+        throw new error;
     }
 }
 
@@ -35,7 +56,7 @@ export const updateRecetaReaction = async (idReceta, update) => {
 
 export const getRecetaById = async (idReceta) => {
     try {
-        const receta = await Receta.findById(idReceta);
+        const receta = await Receta.findById(idReceta).lean();
         return receta
     } catch (error) {
         console.log(error);
@@ -45,12 +66,198 @@ export const getRecetaById = async (idReceta) => {
 }
 
 export const getRecetaComentReactions = async (idReceta) => {
-    const RecetaId = new ObjectId(idReceta);
     try {
+        const RecetaId = new ObjectId(idReceta);
         return await Receta.aggregate(
             [
                 {
-                    $match: { _id: RecetaId }
+                    $match: {
+                        _id: RecetaId,
+                        active: true
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "pasos",
+                        localField: "pasos",
+                        foreignField: "_id",
+                        as: "pasos"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "grupoingredientes",
+                        localField: "grupoIngrediente",
+                        foreignField: "_id",
+                        as: "grupoIngrediente"
+                    }
+                },
+                {
+                    $unwind: "$grupoIngrediente"
+                },
+                {
+                    $unwind: "$grupoIngrediente.item"
+                },
+                {
+                    $lookup: {
+                        from: "items",
+                        localField: "grupoIngrediente.item",
+                        foreignField: "_id",
+                        as: "item"
+                    }
+                },
+                {
+                    $unwind: "$item"
+                },
+                {
+                    $lookup: {
+                        from: "medidas",
+                        localField: "item.medida",
+                        foreignField: "_id",
+                        as: "item.medida"
+                    }
+                },
+                {
+                    $unwind: "$item.medida"
+                },
+                {
+                    $lookup: {
+                        from: "ingredientes",
+                        localField: "item.ingrediente",
+                        foreignField: "_id",
+                        as: "item.ingrediente"
+                    }
+                },
+                {
+                    $unwind: "$item.ingrediente"
+                },
+                {
+                    $group: {
+                        _id: {
+                            grupoIngrediente_id:
+                                "$grupoIngrediente._id",
+                            grupoIngrediente_nombreGrupo:
+                                "$grupoIngrediente.nombreGrupo",
+                            _id: "$_id"
+                        },
+                        grupoIngrediente_id: {
+                            $first: "$grupoIngrediente._id"
+                        },
+                        grupoIngrediente_nombreGrupo: {
+                            $first: "$grupoIngrediente.nombreGrupo"
+                        },
+                        items: {
+                            $push: {
+                                _id: "$item._id",
+                                medida: "$item.medida",
+                                ingrediente: "$item.ingrediente",
+                                valor: "$item.valor"
+                            }
+                        },
+                        titulo: {
+                            $first: "$titulo"
+                        },
+                        descripcion: {
+                            $first: "$descripcion"
+                        },
+                        images: {
+                            $first: "$images"
+                        },
+                        hours: {
+                            $first: "$hours"
+                        },
+                        minutes: {
+                            $first: "$minutes"
+                        },
+                        cantidadPersonas: {
+                            $first: "$cantidadPersonas"
+                        },
+                        dificultad: {
+                            $first: "$dificultad"
+                        },
+                        categoria: {
+                            $first: "$categoria"
+                        },
+                        utencilio: {
+                            $first: "$utencilio"
+                        },
+                        subCategoria: {
+                            $first: "$subCategoria"
+                        },
+                        user: {
+                            $first: "$user"
+                        },
+                        reactions: {
+                            $first: "$reactions"
+                        },
+                        pasos: {
+                            $first: "$pasos"
+                        },
+                        fechaReceta: {
+                            $first: "$fechaReceta"
+                        },
+                        comments: {
+                            $first: "$comments"
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$_id._id",
+                        titulo: {
+                            $first: "$titulo"
+                        },
+                        descripcion: {
+                            $first: "$descripcion"
+                        },
+                        images: {
+                            $first: "$images"
+                        },
+                        hours: {
+                            $first: "$hours"
+                        },
+                        minutes: {
+                            $first: "$minutes"
+                        },
+                        cantidadPersonas: {
+                            $first: "$cantidadPersonas"
+                        },
+                        dificultad: {
+                            $first: "$dificultad"
+                        },
+                        categoria: {
+                            $first: "$categoria"
+                        },
+                        grupoIngrediente: {
+                            $push: {
+                                _id: "$grupoIngrediente_id",
+                                nombreGrupo:
+                                    "$_id.grupoIngrediente_nombreGrupo",
+                                item: "$items"
+                            }
+                        },
+                        utencilio: {
+                            $first: "$utencilio"
+                        },
+                        subCategoria: {
+                            $first: "$subCategoria"
+                        },
+                        user: {
+                            $first: "$user"
+                        },
+                        reactions: {
+                            $first: "$reactions"
+                        },
+                        pasos: {
+                            $first: "$pasos"
+                        },
+                        fechaReceta: {
+                            $first: "$fechaReceta"
+                        },
+                        comments: {
+                            $first: "$comments"
+                        }
+                    }
                 },
                 {
                     $lookup: {
