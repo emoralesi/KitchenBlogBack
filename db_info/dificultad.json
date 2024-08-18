@@ -1,0 +1,38 @@
+[
+  {
+    "nombreDificultad": "Easy"
+  },
+  {
+    "nombreDificultad": "Simple"
+  },
+  {
+    "nombreDificultad": "Quick"
+  },
+  {
+    "nombreDificultad": "Basic"
+  },
+  {
+    "nombreDificultad": "Intermediate"
+  },
+  {
+    "nombreDificultad": "Moderate"
+  },
+  {
+    "nombreDificultad": "Challenging"
+  },
+  {
+    "nombreDificultad": "Advanced"
+  },
+  {
+    "nombreDificultad": "Complex"
+  },
+  {
+    "nombreDificultad": "Gourmet"
+  },
+  {
+    "nombreDificultad": "Masterchef"
+  },
+  {
+    "nombreDificultad": "Professional"
+  }
+]

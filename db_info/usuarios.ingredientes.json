@@ -1,0 +1,84 @@
+[{
+  "_id": {
+    "$oid": "66785018034aeb99adb84e98"
+  },
+  "nombreIngrediente": "Leche",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6678501d034aeb99adb84e9a"
+  },
+  "nombreIngrediente": "Leche Sin Lactosa",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66785025034aeb99adb84e9c"
+  },
+  "nombreIngrediente": "Pasta",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6678502c034aeb99adb84e9e"
+  },
+  "nombreIngrediente": "Frijoles",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66785031034aeb99adb84ea0"
+  },
+  "nombreIngrediente": "Porotos",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6678503a034aeb99adb84ea2"
+  },
+  "nombreIngrediente": "Salsa De Tomate",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6678503e034aeb99adb84ea4"
+  },
+  "nombreIngrediente": "Salsa De Ajo",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66785043034aeb99adb84ea6"
+  },
+  "nombreIngrediente": "Salsa Blanca",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66785047034aeb99adb84ea8"
+  },
+  "nombreIngrediente": "Sal",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66852e28665973d3c755bd89"
+  },
+  "nombreIngrediente": "Papa",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66852e31665973d3c755bd8b"
+  },
+  "nombreIngrediente": "Cebolla",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66852e8d665973d3c755bd98"
+  },
+  "nombreIngrediente": "Huevo",
+  "__v": 0
+}]

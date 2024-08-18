@@ -1,0 +1,77 @@
+[
+    {
+        "nombreCategoria": "Starter"
+    },
+    {
+        "nombreCategoria": "Appetizer"
+    },
+    {
+        "nombreCategoria": "Soup"
+    },
+    {
+        "nombreCategoria": "Salad"
+    },
+    {
+        "nombreCategoria": "Main Course"
+    },
+    {
+        "nombreCategoria": "Side Dish"
+    },
+    {
+        "nombreCategoria": "Entree"
+    },
+    {
+        "nombreCategoria": "Dessert"
+    },
+    {
+        "nombreCategoria": "Snack"
+    },
+    {
+        "nombreCategoria": "Breakfast"
+    },
+    {
+        "nombreCategoria": "Brunch"
+    },
+    {
+        "nombreCategoria": "Lunch"
+    },
+    {
+        "nombreCategoria": "Dinner"
+    },
+    {
+        "nombreCategoria": "Buffet"
+    },
+    {
+        "nombreCategoria": "Banquet"
+    },
+    {
+        "nombreCategoria": "Picnic"
+    },
+    {
+        "nombreCategoria": "Barbecue"
+    },
+    {
+        "nombreCategoria": "Potluck"
+    },
+    {
+        "nombreCategoria": "Tasting Menu"
+    },
+    {
+        "nombreCategoria": "Degustation"
+    },
+    {
+        "nombreCategoria": "Tapas"
+    },
+    {
+        "nombreCategoria": "Sharing Platter"
+    },
+    {
+        "nombreCategoria": "Family Style"
+    },
+    {
+        "nombreCategoria": "Cocktail"
+    },
+    {
+        "nombreCategoria": "Mocktail"
+    }
+]

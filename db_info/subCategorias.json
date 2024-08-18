@@ -1,0 +1,56 @@
+[
+  {
+    "nombreSubCategoria": "Vegetarian"
+  },
+  {
+    "nombreSubCategoria": "Vegan"
+  },
+  {
+    "nombreSubCategoria": "Pescatarian"
+  },
+  {
+    "nombreSubCategoria": "Gluten-Free"
+  },
+  {
+    "nombreSubCategoria": "Dairy-Free"
+  },
+  {
+    "nombreSubCategoria": "Nut-Free"
+  },
+  {
+    "nombreSubCategoria": "Egg-Free"
+  },
+  {
+    "nombreSubCategoria": "Shellfish-Free"
+  },
+  {
+    "nombreSubCategoria": "Soy-Free"
+  },
+  {
+    "nombreSubCategoria": "Paleo"
+  },
+  {
+    "nombreSubCategoria": "Keto"
+  },
+  {
+    "nombreSubCategoria": "Low Carb"
+  },
+  {
+    "nombreSubCategoria": "Low Fat"
+  },
+  {
+    "nombreSubCategoria": "Low Sodium"
+  },
+  {
+    "nombreSubCategoria": "High Protein"
+  },
+  {
+    "nombreSubCategoria": "Halal"
+  },
+  {
+    "nombreSubCategoria": "Kosher"
+  },
+  {
+    "nombreSubCategoria": "Organic"
+  }
+]
