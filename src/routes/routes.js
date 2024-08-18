@@ -1,3 +1,4 @@
+import pkg from 'cloudinary';
 import express from 'express';
 import SSE from 'express-sse';
 import { body, validationResult } from 'express-validator';
@@ -8,20 +9,42 @@ import { saveGrupoIngrediente } from '../dao/GrupoIngredienteDao.js';
 import { getIngrediente, saveIngrediente } from '../dao/IngredienteDao.js';
 import { saveItem } from '../dao/ItemDao.js';
 import { getMedida, saveMedida } from '../dao/MedidaDao.js';
+import { actualizarPined, desactivateRecipe, obtenerShopping } from '../dao/RecetaDao.js';
 import { getSubCategoria, saveSubCategoria } from '../dao/SubCategoriaDao.js';
-import { getUserbyId, getUserbyUsename, obtenerFavouriteByIdUser } from '../dao/UserDao.js';
+import { getUserbyId, getUserbyUsename, obtenerDatosRecAndFav, obtenerFavouriteByIdUser } from '../dao/UserDao.js';
 import { getUtencilios, saveUtencilio } from '../dao/UtencilioDao.js';
+import Usuario from '../models/usuarioModel.js';
 import { guardarComment, saveUpdateReactionComment } from '../services/CommentService.js';
 import { obtenerNotificationes } from '../services/NotificationService.js';
-import { GetFullRecetaById, GetRecetasByIdUser, guardarReceta, saveUpdateReactionReceta } from '../services/RecetaService.js';
-import { LoginUser, UserRegister, getUserDescubrir, saveUpdateFavourite } from '../services/UserService.js';
-import { obtenerShopping } from '../dao/RecetaDao.js';
+import { actualizarReceta, GetFullRecetaById, GetRecetasByIdUser, guardarReceta, saveUpdateReactionReceta } from '../services/RecetaService.js';
+import { getUserDescubrir, LoginUser, saveUpdateFavourite, UserRegister } from '../services/UserService.js';
 import { sendEmail } from '../utils/sendEmail.js';
+import multer from 'multer';
 
 const app = express();
 const sse = new SSE();
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Carpeta donde se guardarán los archivos
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
+
 const connections = new Map();
+const { v2: cloudinary } = pkg;
+// Configuración de Cloudinary
+cloudinary.config({
+    cloud_name: '',
+    api_key: '',
+    api_secret: '',  // Reemplaza con tu clave secreta
+});
+
 
 export function sendSSEToUser(userId, eventData) {
     // Encuentra la conexión del usuario
@@ -142,13 +165,46 @@ app.post('/obtenerRecetaById', authMiddleware, async (req, res) => {
     }
 })
 
-app.post('/saveReceta', async (req, res) => {
+app.post('/saveReceta', authMiddleware, upload.fields([{ name: 'recipeImages', maxCount: 10 }, { name: 'stepsImages', maxCount: 10 }]), async (req, res) => {
     try {
+        const recipeImages = req.files['recipeImages'];
+        const stepsImages = req.files['stepsImages'];
+        const receta = JSON.parse(req.body.receta);
+        // Accede al resto de los datos JSON
 
-        return await guardarReceta(req.body, res)
+        console.log("Imágenes de la receta: ", recipeImages);
+        console.log("Imágenes de los pasos: ", stepsImages);
+        console.log("Receta: ", receta);
+
+        // Parse the receta object if necessary
+
+        return await guardarReceta(receta, res, recipeImages, stepsImages, cloudinary);
 
     } catch (error) {
         console.error('Error al reaccionar:', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
+    }
+});
+
+app.post('/updateReceta', authMiddleware, async (req, res) => {
+    try {
+
+        return await actualizarReceta(req.body, res)
+
+    } catch (error) {
+        console.error('Error al updateReceta:', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
+    }
+})
+
+app.post('/updatePined', authMiddleware, async (req, res) => {
+    try {
+
+        const data = await actualizarPined(req.body, res)
+        res.status(200).json({ status: 'ok', data: data })
+
+    } catch (error) {
+        console.error('Error al updateReceta:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
     }
 })
@@ -321,7 +377,7 @@ app.post('/obtenerIdUsuarioByUserName', authMiddleware, async (req, res) => {
     try {
         const Usuario = await getUserbyUsename(req.body.username);
         console.log("mi usuario", Usuario);
-        res.status(200).json({ status: 'ok', userId: Usuario._id })
+        res.status(200).json({ status: 'ok', userId: Usuario._id, user: Usuario })
     } catch (error) {
         console.error('Error al obtener Dificultades: ', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener Dificultades' });
@@ -365,9 +421,29 @@ app.post('/saveUpdateCommentReaction', authMiddleware, async (req, res) => {
     }
 })
 
+app.post('/desactivarReceta', authMiddleware, async (req, res) => {
+    try {
+        const result = await desactivateRecipe(req.body.recetaId, res);
+        res.status(200).json({ status: 'ok', data: result })
+    } catch (error) {
+        console.error('Error al guardar o remover reaction: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al guardar o remover reaction' });
+    }
+})
+
 app.post('/obtenerFavourite', authMiddleware, async (req, res) => {
     try {
         const User = await obtenerFavouriteByIdUser(req.body.idUser);
+        res.status(200).json({ status: 'ok', data: User })
+    } catch (error) {
+        console.error('Error al obtener favourite: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener favourite' });
+    }
+})
+
+app.post('/obtenerDataUsuario', authMiddleware, async (req, res) => {
+    try {
+        const User = await obtenerDatosRecAndFav(req.body.idUser);
         res.status(200).json({ status: 'ok', data: User })
     } catch (error) {
         console.error('Error al obtener favourite: ', error);
@@ -396,6 +472,25 @@ app.post('/sendEmailShopping', async (req, res) => {
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener shopping' });
     }
 })
+
+app.post('/upload-profile-image', authMiddleware, async (req, res) => {
+    try {
+
+        const user = await Usuario.findById(req.body.idUsuario);
+        console.log("mi user id", req.body.idUsuario);
+        // Asegúrate de que req.user._id esté disponible
+        const optimizedUrl = cloudinary.url(req.file.path, {
+            fetch_format: 'auto',
+            quality: 'auto',
+        });
+        user.profileImageUrl = optimizedUrl;  // Guarda la URL de la imagen en la base de datos
+        await user.save();
+
+        res.json({ message: 'Imagen de perfil actualizada correctamente', imageUrl: optimizedUrl });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar la imagen de perfil', error });
+    }
+});
 
 
 export default app
