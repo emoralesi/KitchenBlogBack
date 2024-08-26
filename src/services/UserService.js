@@ -1,6 +1,7 @@
 import { getUserbyEmail, getUserbyUsename, getUsersDescovery, saveUser, updateFavourite } from "../dao/UserDao.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { updateFavouriteReceta } from "../dao/RecetaDao.js";
 
 export const UserRegister = async (body, res) => {
     try {
@@ -73,21 +74,31 @@ export const getUserDescubrir = async (body, res) => {
 export const saveUpdateFavourite = async (params, res) => {
     try {
         let update;
+        let updateReceta;
         console.log(params);
         if (params.estado == true) {
             // Add to favourites
             update = { $addToSet: { favourite: params.idReceta } }; // $addToSet prevents duplicates
+            updateReceta = { $addToSet: { favourite: params.idUser } }
         } else if (params.estado == false) {
             // Remove from favourites
             update = { $pull: { favourite: params.idReceta } };
+            updateReceta = { $pull: { favourite: params.idUser } }
         } else {
             return res.status(400).send({ status: 'warning', message: "Invalid status value. Use 'true' or 'false'." });
         }
 
         const result = await updateFavourite(params.idUser, update);
+        const resultReceta = await updateFavouriteReceta(params.idReceta, updateReceta);
+        console.log("mi updateReceta", updateReceta);
+
 
         if (!result) {
             return res.status(404).send({ status: 'warning', message: "User not found" });
+        }
+
+        if (!resultReceta) {
+            return res.status(404).send({ status: 'warning', message: "Receta not found" });
         }
 
         res.status(200).send({ status: 200, message: 'suceed', cantidadFavourite: result.favourite.length });

@@ -16,8 +16,7 @@ export const GetRecetasByIdUser = async (params, res) => {
     console.log(params);
     try {
         const Recetas = await obtenerRecetaByIdUser(params.userId);
-        console.log(Recetas);
-        console.log(Recetas[0]?.recetas?.length);
+        console.log(Recetas)
         if (Recetas[0]?.recetas?.length > 0) {
             res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas[0].recetas.length + ' Recetas', Recetas: Recetas[0].recetas });
         } else {
@@ -59,7 +58,7 @@ export const saveUpdateReactionReceta = async (params, res) => {
                 referenciaModelo: 'Receta'
             });
 
-            update = { $addToSet: { reactions: saveReactionResult._id } }; // $addToSet prevents duplicates
+            update = { $addToSet: { reactions: saveReactionResult._id.toString() } }; // $addToSet prevents duplicates
 
         } else if (params.estado == false) {
 
@@ -70,6 +69,8 @@ export const saveUpdateReactionReceta = async (params, res) => {
             return res.status(400).send({ status: 'warning', message: "Invalid status value. Use 'true' or 'false'." });
         }
 
+        console.log("update", update);
+
         const reactionNew = await updateRecetaReaction(params.idReceta, update);
 
         if (!reactionNew) {
@@ -77,28 +78,16 @@ export const saveUpdateReactionReceta = async (params, res) => {
         }
 
         if (params.estado == false) {
-            console.log(params.idUser);
-            console.log(params.idReceta);
-            console.log(findReaction[0]._id.toString());
             await deleteNotification(params.idUser, params.idReceta, findReaction[0]._id.toString(), 'Reaction');
             await deleteReaction(findReaction[0]._id.toString())
         }
-        console.log("mi reactionNew", reactionNew);
 
         const userAction = await getUserbyId(params.idUser);
 
-        console.log("userAction", userAction);
-
         const recetaNoti = await getRecetaById(params.idReceta);
-
-        console.log("recetaNoti", recetaNoti);
 
         const result = { reaction: reactionNew, user: userAction, receta: recetaNoti, action_noti: params.type }
 
-        console.log("mi result", result);
-
-        console.log(params.estado);
-        console.log(params.estado == true);
         if (params.estado == true) {
             console.log(params.idUser);
             console.log(recetaNoti.user.toString())
@@ -185,6 +174,7 @@ export const guardarReceta = async (params, res, imageRecipes, imageSteps, cloud
             pasosId.push(resultPasos._id);
         });
         params.pasos = pasosId;
+        params.favourite = [];
 
         const newReceta = await saveReceta(params);
 
@@ -202,8 +192,6 @@ export const guardarReceta = async (params, res, imageRecipes, imageSteps, cloud
 }
 
 export const actualizarReceta = async (params, res) => {
-
-    params.images = ['https://via.placeholder.com/400'];
 
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -277,6 +265,8 @@ export const actualizarReceta = async (params, res) => {
 
         console.log(originalReceta);
         console.log(params);
+        params.images = originalReceta.images;
+        params.favourite = originalReceta.favourite;
 
         var newReceta = null;
 

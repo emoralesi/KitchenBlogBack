@@ -40,9 +40,9 @@ const connections = new Map();
 const { v2: cloudinary } = pkg;
 // Configuración de Cloudinary
 cloudinary.config({
-    cloud_name: '',
-    api_key: '',
-    api_secret: '',  // Reemplaza con tu clave secreta
+    cloud_name: 'dhkttsgtq',
+    api_key: '134496632225334',
+    api_secret: 'vMp7YF2trsIqrsz4h4-U7xdf3oU',  // Reemplaza con tu clave secreta
 });
 
 
@@ -473,21 +473,28 @@ app.post('/sendEmailShopping', async (req, res) => {
     }
 })
 
-app.post('/upload-profile-image', authMiddleware, async (req, res) => {
+app.post('/upload-profile-image', authMiddleware, upload.single('profileImage'), async (req, res) => {
     try {
+        console.log("path", req.file.path);
+
+        const optimizedUrl = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'Profiles_images',
+            format: 'png',
+            fetch_format: 'auto',
+            quality: 'auto',
+            asset_folder: 'Profiles_images'
+        });
 
         const user = await Usuario.findById(req.body.idUsuario);
         console.log("mi user id", req.body.idUsuario);
         // Asegúrate de que req.user._id esté disponible
-        const optimizedUrl = cloudinary.url(req.file.path, {
-            fetch_format: 'auto',
-            quality: 'auto',
-        });
-        user.profileImageUrl = optimizedUrl;  // Guarda la URL de la imagen en la base de datos
+        user.profileImageUrl = optimizedUrl.url;  // Guarda la URL de la imagen en la base de datos
         await user.save();
 
-        res.json({ message: 'Imagen de perfil actualizada correctamente', imageUrl: optimizedUrl });
+        res.json({ message: 'Imagen de perfil actualizada correctamente', imageUrl: optimizedUrl.url });
     } catch (error) {
+        console.log(error);
+
         res.status(500).json({ message: 'Error al actualizar la imagen de perfil', error });
     }
 });

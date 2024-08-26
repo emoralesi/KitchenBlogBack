@@ -478,6 +478,232 @@ export const getRecetaComentReactions = async (idReceta) => {
     }
 }
 
+export const updateFavouriteReceta = async (idReceta, update) => {
+    try {
+        const updatedUser = await Receta.findByIdAndUpdate(
+            idReceta,
+            update,
+            { new: true }
+        );
+        return updatedUser
+    } catch (error) {
+        console.log(error);
+    }
+
+    return updatedUser;
+}
+
+export const updateReactionReceta = async (idReceta, update) => {
+    try {
+        const updatedUser = await Receta.findByIdAndUpdate(
+            idReceta,
+            update,
+            { new: true }
+        );
+        return updatedUser
+    } catch (error) {
+        console.log(error);
+    }
+
+    return updatedUser;
+}
+
+export const getIngredientesByReceta = async (idReceta) => {
+    try {
+        const RecetaId = new ObjectId(idReceta);
+        return await Receta.aggregate([
+            {
+                $match: {
+                    _id: RecetaId,
+                    active: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "grupoingredientes",
+                    localField: "grupoIngrediente",
+                    foreignField: "_id",
+                    as: "grupoIngrediente"
+                }
+            },
+            {
+                $unwind: "$grupoIngrediente"
+            },
+            {
+                $unwind: "$grupoIngrediente.item"
+            },
+            {
+                $lookup: {
+                    from: "items",
+                    localField: "grupoIngrediente.item",
+                    foreignField: "_id",
+                    as: "item"
+                }
+            },
+            {
+                $unwind: "$item"
+            },
+            {
+                $lookup: {
+                    from: "medidas",
+                    localField: "item.medida",
+                    foreignField: "_id",
+                    as: "item.medida"
+                }
+            },
+            {
+                $unwind: "$item.medida"
+            },
+            {
+                $lookup: {
+                    from: "ingredientes",
+                    localField: "item.ingrediente",
+                    foreignField: "_id",
+                    as: "item.ingrediente"
+                }
+            },
+            {
+                $unwind: "$item.ingrediente"
+            },
+            {
+                $group: {
+                    _id: {
+                        grupoIngrediente_id:
+                            "$grupoIngrediente._id",
+                        grupoIngrediente_nombreGrupo:
+                            "$grupoIngrediente.nombreGrupo",
+                        _id: "$_id"
+                    },
+                    grupoIngrediente_id: {
+                        $first: "$grupoIngrediente._id"
+                    },
+                    grupoIngrediente_nombreGrupo: {
+                        $first: "$grupoIngrediente.nombreGrupo"
+                    },
+                    items: {
+                        $push: {
+                            _id: "$item._id",
+                            medida: "$item.medida",
+                            ingrediente: "$item.ingrediente",
+                            valor: "$item.valor"
+                        }
+                    },
+                    titulo: {
+                        $first: "$titulo"
+                    },
+                    descripcion: {
+                        $first: "$descripcion"
+                    },
+                    images: {
+                        $first: "$images"
+                    },
+                    hours: {
+                        $first: "$hours"
+                    },
+                    minutes: {
+                        $first: "$minutes"
+                    },
+                    cantidadPersonas: {
+                        $first: "$cantidadPersonas"
+                    },
+                    dificultad: {
+                        $first: "$dificultad"
+                    },
+                    categoria: {
+                        $first: "$categoria"
+                    },
+                    utencilio: {
+                        $first: "$utencilio"
+                    },
+                    subCategoria: {
+                        $first: "$subCategoria"
+                    },
+                    user: {
+                        $first: "$user"
+                    },
+                    reactions: {
+                        $first: "$reactions"
+                    },
+                    pasos: {
+                        $first: "$pasos"
+                    },
+                    fechaReceta: {
+                        $first: "$fechaReceta"
+                    },
+                    comments: {
+                        $first: "$comments"
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id._id",
+                    titulo: {
+                        $first: "$titulo"
+                    },
+                    descripcion: {
+                        $first: "$descripcion"
+                    },
+                    images: {
+                        $first: "$images"
+                    },
+                    hours: {
+                        $first: "$hours"
+                    },
+                    minutes: {
+                        $first: "$minutes"
+                    },
+                    cantidadPersonas: {
+                        $first: "$cantidadPersonas"
+                    },
+                    dificultad: {
+                        $first: "$dificultad"
+                    },
+                    categoria: {
+                        $first: "$categoria"
+                    },
+                    grupoIngrediente: {
+                        $push: {
+                            _id: "$grupoIngrediente_id",
+                            nombreGrupo:
+                                "$_id.grupoIngrediente_nombreGrupo",
+                            item: "$items"
+                        }
+                    },
+                    utencilio: {
+                        $first: "$utencilio"
+                    },
+                    subCategoria: {
+                        $first: "$subCategoria"
+                    },
+                    user: {
+                        $first: "$user"
+                    },
+                    reactions: {
+                        $first: "$reactions"
+                    },
+                    pasos: {
+                        $first: "$pasos"
+                    },
+                    fechaReceta: {
+                        $first: "$fechaReceta"
+                    },
+                    comments: {
+                        $first: "$comments"
+                    }
+                }
+            },
+            {
+                $project: {
+                    grupoIngrediente: 1
+                }
+            }
+        ])
+    } catch (error) {
+
+    }
+}
+
 export const obtenerShopping = async (idRecetas) => {
 
     idRecetas.forEach((element, index, arr) => {
