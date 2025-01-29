@@ -9,7 +9,7 @@ import { saveGrupoIngrediente } from '../dao/GrupoIngredienteDao.js';
 import { getIngrediente, saveIngrediente } from '../dao/IngredienteDao.js';
 import { saveItem } from '../dao/ItemDao.js';
 import { getMedida, saveMedida } from '../dao/MedidaDao.js';
-import { actualizarPined, desactivateRecipe, obtenerShopping } from '../dao/RecetaDao.js';
+import { actualizarPined, desactivateRecipe, getRecetasInfo, obtenerShopping } from '../dao/RecetaDao.js';
 import { getSubCategoria, saveSubCategoria } from '../dao/SubCategoriaDao.js';
 import { getUserbyId, getUserbyUsename, obtenerDatosRecAndFav, obtenerFavouriteByIdUser } from '../dao/UserDao.js';
 import { getUtencilios, saveUtencilio } from '../dao/UtencilioDao.js';
@@ -433,11 +433,33 @@ app.post('/desactivarReceta', authMiddleware, async (req, res) => {
 
 app.post('/obtenerFavourite', authMiddleware, async (req, res) => {
     try {
-        const User = await obtenerFavouriteByIdUser(req.body.idUser);
-        res.status(200).json({ status: 'ok', data: User })
+        console.log("mis parametros de entrada", req.body);
+
+        const User = await obtenerFavouriteByIdUser(req.body.idUser, req.body.page, req.body.limit);
+        if (User[0]?.favourite?.length > 0) {
+            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + User[0].favourite.length + ' Recetas', Favourites: User[0].favourite, totalFavourite: User[0].totalFavourite });
+        } else {
+            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Favourites: [] });
+        }
     } catch (error) {
         console.error('Error al obtener favourite: ', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener favourite' });
+    }
+})
+
+app.post('/obtenerRecetasinfo', authMiddleware, async (req, res) => {
+    try {
+        const Recetas = await getRecetasInfo(req.body.page, req.body.limit, req.body.filter);
+        console.log("mi Recetas", Recetas);
+
+        if (Recetas.recetas?.length > 0) {
+            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas.recetas.length + ' Recetas', Recetas: Recetas.recetas, totalRecetas: Recetas.total });
+        } else {
+            res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Recetas: [] });
+        }
+    } catch (error) {
+        console.error('Error al obtener favourite: ', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al obtener recetas info' });
     }
 })
 

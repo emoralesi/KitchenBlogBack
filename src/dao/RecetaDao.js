@@ -65,6 +65,519 @@ export const getRecetaById = async (idReceta) => {
     return updatedUser;
 }
 
+
+export const getRecetasInfo = async (page, limit, filters) => {
+    const skip = (page - 1) * limit;
+
+    try {
+
+        let match = { active: true };
+        let ingredienteMatch = {};
+
+        if (filters?.titulo) {
+            match.titulo = { $regex: filters?.titulo, $options: "i" }; // Busca el título que contenga el texto, insensible a mayúsculas/minúsculas
+        }
+
+        if (filters?.dificultad) {
+            const dificultadId = new ObjectId(filters.dificultad)
+            match.dificultad = { $eq: dificultadId };
+        }
+
+        if (filters?.categoria) {
+            const categoriaId = new ObjectId(filters.categoria)
+            match.categoria = { $eq: categoriaId };
+        }
+
+        console.log("deberia ser true", filters?.subCategoria && filters?.subCategoria.length > 0);
+
+        if (filters?.subCategoria && filters?.subCategoria.length > 0) {
+            const subCategoriasModificadas = filters.subCategoria.map(element => new ObjectId(element));
+
+            console.log("mi new categorias mod", subCategoriasModificadas);
+
+            match.subCategoria = { $all: subCategoriasModificadas }; // Filtra por las categorías especificadas
+        }
+
+        if (filters?.ingredientes?.length > 0) {
+            const ingredienteModificado = filters.ingredientes.map(element => new ObjectId(element));
+
+            console.log("mi ingrediente mod", ingredienteModificado);
+
+            ingredienteMatch = {
+                "grupoIngrediente.item.ingrediente._id": {
+                    $all: ingredienteModificado
+                }
+            };
+        }
+        const recetas = await Receta.aggregate([
+            {
+                $match: match
+            },
+            {
+                $addFields: {
+                    recetas: {
+                        $filter: {
+                            input: "$recetas",
+                            as: "receta",
+                            cond: {
+                                $eq: ["$$receta.active", true]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $facet: {
+                    totalRecetas: [
+                        {
+                            $count: "count"
+                        }
+                    ],
+                    recetas: [
+                        {
+                            $lookup: {
+                                from: "usuarios",
+                                let: {
+                                    userId: "$user"
+                                },
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            $expr: {
+                                                $eq: ["$_id", "$$userId"]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            _id: 1,
+                                            username: 1,
+                                            profileImageUrl: 1
+                                        }
+                                    }
+                                ],
+                                as: "user"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "dificultads",
+                                localField: "dificultad",
+                                foreignField: "_id",
+                                as: "dificultad"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "categorias",
+                                localField: "categoria",
+                                foreignField: "_id",
+                                as: "categoria"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "comments",
+                                localField: "_id",
+                                foreignField: "receta",
+                                as: "comments"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$subCategoria",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "subcategorias",
+                                localField: "subCategoria",
+                                foreignField: "_id",
+                                as: "subCategoria"
+                            }
+                        },
+                        {
+                            $addFields: {
+                                subCategoria: {
+                                    $cond: {
+                                        if: {
+                                            $isArray: "$subCategoria"
+                                        },
+                                        then: {
+                                            $arrayElemAt: ["$subCategoria", 0]
+                                        },
+                                        else: "$subCategoria"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$_id",
+                                titulo: {
+                                    $first: "$titulo"
+                                },
+                                descripcion: {
+                                    $first: "$descripcion"
+                                },
+                                images: {
+                                    $first: "$images"
+                                },
+                                reactions: {
+                                    $first: "$reactions"
+                                },
+                                hours: {
+                                    $first: "$hours"
+                                },
+                                minutes: {
+                                    $first: "$minutes"
+                                },
+                                grupoIngrediente: {
+                                    $first: "$grupoIngrediente"
+                                },
+                                cantidadPersonas: {
+                                    $first: "$cantidadPersonas"
+                                },
+                                dificultad: {
+                                    $first: "$dificultad"
+                                },
+                                categoria: {
+                                    $first: "$categoria"
+                                },
+                                comments: {
+                                    $first: "$comments"
+                                },
+                                favourite: {
+                                    $first: "$favourite"
+                                },
+                                user: {
+                                    $first: "$user"
+                                },
+                                pined: {
+                                    $first: "$pined"
+                                },
+                                active: {
+                                    $first: "$active"
+                                },
+                                fechaReceta: {
+                                    $first: "$fechaReceta"
+                                },
+                                subCategoria: {
+                                    $addToSet: "$subCategoria"
+                                }
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "grupoingredientes",
+                                localField: "grupoIngrediente",
+                                foreignField: "_id",
+                                as: "grupoIngrediente"
+                            }
+                        },
+                        {
+                            $unwind: "$grupoIngrediente"
+                        },
+                        {
+                            $unwind: "$grupoIngrediente.item"
+                        },
+                        {
+                            $lookup: {
+                                from: "items",
+                                localField: "grupoIngrediente.item",
+                                foreignField: "_id",
+                                as: "item"
+                            }
+                        },
+                        {
+                            $unwind: "$item"
+                        },
+                        {
+                            $lookup: {
+                                from: "medidas",
+                                localField: "item.medida",
+                                foreignField: "_id",
+                                as: "item.medida"
+                            }
+                        },
+                        {
+                            $unwind: "$item.medida"
+                        },
+                        {
+                            $lookup: {
+                                from: "ingredientes",
+                                localField: "item.ingrediente",
+                                foreignField: "_id",
+                                as: "item.ingrediente"
+                            }
+                        },
+                        {
+                            $unwind: "$item.ingrediente"
+                        },
+                        {
+                            $group: {
+                                _id: {
+                                    grupoIngrediente_id:
+                                        "$grupoIngrediente._id",
+                                    grupoIngrediente_nombreGrupo:
+                                        "$grupoIngrediente.nombreGrupo",
+                                    _id: "$_id"
+                                },
+                                grupoIngrediente_id: {
+                                    $first: "$grupoIngrediente._id"
+                                },
+                                grupoIngrediente_nombreGrupo: {
+                                    $first: "$grupoIngrediente.nombreGrupo"
+                                },
+                                items: {
+                                    $push: {
+                                        _id: "$item._id",
+                                        medida: "$item.medida",
+                                        ingrediente: "$item.ingrediente",
+                                        valor: "$item.valor"
+                                    }
+                                },
+                                titulo: {
+                                    $first: "$titulo"
+                                },
+                                descripcion: {
+                                    $first: "$descripcion"
+                                },
+                                images: {
+                                    $first: "$images"
+                                },
+                                reactions: {
+                                    $first: "$reactions"
+                                },
+                                hours: {
+                                    $first: "$hours"
+                                },
+                                minutes: {
+                                    $first: "$minutes"
+                                },
+                                cantidadPersonas: {
+                                    $first: "$cantidadPersonas"
+                                },
+                                dificultad: {
+                                    $first: "$dificultad"
+                                },
+                                categoria: {
+                                    $first: "$categoria"
+                                },
+                                utencilio: {
+                                    $first: "$utencilio"
+                                },
+                                subCategoria: {
+                                    $first: "$subCategoria"
+                                },
+                                user: {
+                                    $first: "$user"
+                                },
+                                reactions: {
+                                    $first: "$reactions"
+                                },
+                                pasos: {
+                                    $first: "$pasos"
+                                },
+                                favourite: {
+                                    $first: "$favourite"
+                                },
+                                user: {
+                                    $first: "$user"
+                                },
+                                fechaReceta: {
+                                    $first: "$fechaReceta"
+                                },
+                                comments: {
+                                    $first: "$comments"
+                                },
+                                pined: {
+                                    $first: "$pined"
+                                },
+                                active: {
+                                    $first: "$active"
+                                }
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "reactions",
+                                localField: "reactions",
+                                foreignField: "_id",
+                                as: "reactions"
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$_id._id",
+                                titulo: {
+                                    $first: "$titulo"
+                                },
+                                descripcion: {
+                                    $first: "$descripcion"
+                                },
+                                images: {
+                                    $first: "$images"
+                                },
+                                hours: {
+                                    $first: "$hours"
+                                },
+                                minutes: {
+                                    $first: "$minutes"
+                                },
+                                cantidadPersonas: {
+                                    $first: "$cantidadPersonas"
+                                },
+                                dificultad: {
+                                    $first: "$dificultad"
+                                },
+                                categoria: {
+                                    $first: "$categoria"
+                                },
+                                grupoIngrediente: {
+                                    $push: {
+                                        _id: "$grupoIngrediente_id",
+                                        nombreGrupo:
+                                            "$_id.grupoIngrediente_nombreGrupo",
+                                        item: "$items"
+                                    }
+                                },
+                                utencilio: {
+                                    $first: "$utencilio"
+                                },
+                                subCategoria: {
+                                    $first: "$subCategoria"
+                                },
+                                user: {
+                                    $first: "$user"
+                                },
+                                reactions: {
+                                    $first: "$reactions"
+                                },
+                                pasos: {
+                                    $first: "$pasos"
+                                },
+                                favourite: {
+                                    $first: "$favourite"
+                                },
+                                user: {
+                                    $first: "$user"
+                                },
+                                fechaReceta: {
+                                    $first: "$fechaReceta"
+                                },
+                                comments: {
+                                    $first: "$comments"
+                                },
+                                reactions: {
+                                    $first: "$reactions"
+                                },
+                                pined: {
+                                    $first: "$pined"
+                                },
+                                active: {
+                                    $first: "$active"
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$_id",
+                                titulo: {
+                                    $first: "$titulo"
+                                },
+                                descripcion: {
+                                    $first: "$descripcion"
+                                },
+                                images: {
+                                    $first: "$images"
+                                },
+                                hours: {
+                                    $first: "$hours"
+                                },
+                                minutes: {
+                                    $first: "$minutes"
+                                },
+                                grupoIngrediente: {
+                                    $first: "$grupoIngrediente"
+                                },
+                                cantidadPersonas: {
+                                    $first: "$cantidadPersonas"
+                                },
+                                dificultad: {
+                                    $first: "$dificultad"
+                                },
+                                categoria: {
+                                    $first: "$categoria"
+                                },
+                                subCategoria: {
+                                    $first: "$subCategoria"
+                                },
+                                comments: {
+                                    $first: "$comments"
+                                },
+                                reactions: {
+                                    $first: "$reactions"
+                                },
+                                pined: {
+                                    $first: "$pined"
+                                },
+                                active: {
+                                    $first: "$active"
+                                },
+                                fechaReceta: {
+                                    $first: "$fechaReceta"
+                                },
+                                favourite: {
+                                    $first: "$favourite"
+                                },
+                                user: {
+                                    $first: "$user"
+                                }
+                            }
+                        },
+                        {
+                            $sort: {
+                                fechaReceta: -1
+                            }
+                        },
+                        {
+                            $match: ingredienteMatch
+
+                        }
+                        ,
+                        {
+                            $skip: skip
+                        },
+                        {
+                            $limit: limit
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    total: {
+                        $arrayElemAt: ["$totalRecetas.count", 0]
+                    },
+                    recetas: "$recetas"
+                }
+            }
+        ]).exec();
+
+
+        return {
+            total: recetas[0].total,
+            recetas: recetas[0].recetas
+        };
+
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
 export const getRecetaComentReactions = async (idReceta) => {
     try {
         const RecetaId = new ObjectId(idReceta);

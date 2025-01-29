@@ -15,10 +15,10 @@ import path from 'path'
 export const GetRecetasByIdUser = async (params, res) => {
     console.log(params);
     try {
-        const Recetas = await obtenerRecetaByIdUser(params.userId);
+        const Recetas = await obtenerRecetaByIdUser(params.userId, params.page, params.limit);
         console.log(Recetas)
         if (Recetas[0]?.recetas?.length > 0) {
-            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas[0].recetas.length + ' Recetas', Recetas: Recetas[0].recetas });
+            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas[0].recetas.length + ' Recetas', Recetas: Recetas[0].recetas, totalRecetas: Recetas[0].totalRecetas });
         } else {
             res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Recetas: [] });
         }
@@ -34,7 +34,7 @@ export const GetFullRecetaById = async (params, res) => {
         const Recetas = await getRecetaComentReactions(params.recetaId);
         console.log(Recetas);
         if (Recetas.length > 0) {
-            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas.length + ' Receta', Receta: Recetas[0] });
+            res.status(200).json({ status: 'ok', message: 'Se encontraron ' + Recetas.length + ' Receta', Receta: Recetas });
         } else {
             res.status(200).json({ status: 'notContent', message: 'No se encontraron Recetas', Receta: [] });
         }
@@ -156,7 +156,9 @@ export const guardarReceta = async (params, res, imageRecipes, imageSteps, cloud
         params.grupoIngrediente = gruposId;
 
         var pasosId = [];
-        params.pasos.forEach(async (values, index) => {
+        console.log("mis params pasos", params.pasos);
+
+        for (const [index, values] of params.pasos.entries()) {
             var optimizedUrl = null;
 
             if (imageSteps) {
@@ -171,8 +173,12 @@ export const guardarReceta = async (params, res, imageRecipes, imageSteps, cloud
 
             values.imageStep = optimizedUrl ? optimizedUrl.url : null;
             const resultPasos = await savePasos(values);
-            pasosId.push(resultPasos._id);
-        });
+            console.log("mi result pasos", resultPasos);
+
+            pasosId.push(resultPasos._id.toString());
+        }
+        console.log("mis pasosId", pasosId);
+
         params.pasos = pasosId;
         params.favourite = [];
 
@@ -184,8 +190,6 @@ export const guardarReceta = async (params, res, imageRecipes, imageSteps, cloud
         return res.status(200).json({ status: 'ok', receta: newReceta, message: 'Receta registrada con éxito' });
 
     } catch (error) {
-        // await session.abortTransaction();
-        //session.endSession();
         console.error('Error al registrar Receta:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al registrar receta' });
     }

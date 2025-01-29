@@ -54,7 +54,7 @@ export const LoginUser = async (body, res) => {
 
         // Generar y devolver el token JWT
         const token = jwt.sign({ email: usuario.email }, 'secreto', { expiresIn: '50m' });
-        return res.status(200).json({ status: 'ok', usuarioId: usuario._id, token: token, username: usuario.username, email: usuario.email });
+        return res.status(200).json({ status: 'ok', usuarioId: usuario._id, token: token, username: usuario.username, email: usuario.email, profileImageUrl: usuario.profileImageUrl });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
