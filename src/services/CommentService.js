@@ -1,6 +1,6 @@
 import { getAnswerdOfComment, getCommentById, saveComment, updateCommentReaction } from "../dao/CommentDao.js";
 import { deleteNotification } from "../dao/NotificationDao.js";
-import { deleteReaction, getReactionByReceta, saveReaction } from "../dao/ReactionDao.js";
+import { deleteReaction, getReactionByComment, getReactionByReceta, saveReaction } from "../dao/ReactionDao.js";
 import { getRecetaById } from "../dao/RecetaDao.js";
 import { getUserbyId } from "../dao/UserDao.js";
 import { sendSSEToUser } from "../routes/routes.js";
@@ -111,17 +111,19 @@ export const saveUpdateReactionComment = async (params, res) => {
         let update;
         var findReaction;
         var saveReactionResult;
-        if (params.estado == true) {
+        if (params.estado === true) {
             saveReactionResult = await saveReaction({
                 user_id: params.idUser,
-                referencia_id: params.idReceta,
+                referencia_id: params.idComment,
                 referenciaModelo: 'Comentario'
             });
             update = { $addToSet: { reactions: saveReactionResult._id } }; // $addToSet prevents duplicates
-        } else if (params.estado == false) {
+        } else if (params.estado === false) {
 
-            findReaction = await getReactionByReceta(params.idUser, params.idReceta)
-            update = { $pull: { reactions: findReaction[0]._id.toString() } };
+            findReaction = await getReactionByComment(params.idUser, params.idComment)
+            console.log("mi reaccion encontrada", findReaction);
+
+            update = { $pull: { reactions: findReaction[0]._id } };
         } else {
             return res.status(400).send({ status: 'warning', message: "Invalid status value. Use 'true' or 'false'." });
         }
@@ -132,20 +134,16 @@ export const saveUpdateReactionComment = async (params, res) => {
             return res.status(404).send({ status: 'warning', message: "Comment not found" });
         }
 
-        if (params.estado == false) {
-            console.log(params.idUser, params.idReceta, params.idComment);
+        if (params.estado === false) {
             await deleteNotification(params.idUser, params.idReceta, params.idComment, 'Reaction');
-            await deleteReaction(findReaction[0]._id.toString())
+            await deleteReaction(findReaction[0]._id)
         }
 
         const getComment = await getCommentById(params.idComment);
-        console.log("getComment", getComment);
 
         const getReceta = await getRecetaById(params.idReceta);
-        console.log("getReceta", getReceta);
 
         const usuarioDetails = await getUserbyId(params.idUser);
-        console.log("usuarioDetails", usuarioDetails);
 
         const result = { comment: getComment[0], receta: getReceta, parentComment: null, user: usuarioDetails, action_noti: params.type }
 
@@ -161,16 +159,16 @@ export const saveUpdateReactionComment = async (params, res) => {
                             referenceModelo: TypeReferenceModelo.Reaction,
                             action: TypeNotification.LikeToComment
                         })
-                        console.log("mi notificado : ", getComment[0].user.toString());
+                        //console.log("mi notificado : ", getComment[0].user.toString());
                         sendSSEToUser(getComment[0].user.toString(), result)
                     }
                     break;
                 case TypeNotification.LikeToAnswerd:
                     const getParentComment = await getCommentById(params.parentComment);
-                    console.log("getParentComment", getParentComment);
+                    //console.log("getParentComment", getParentComment);
                     result.parentComment = getParentComment[0];
 
-                    console.log("result final", result);
+                    //console.log("result final", result);
                     if (params.idUser !== getComment[0].user.toString()) {
                         await sendNotification({
                             user_notificated: getComment[0].user.toString(),
@@ -180,7 +178,7 @@ export const saveUpdateReactionComment = async (params, res) => {
                             referenceModelo: TypeReferenceModelo.Reaction,
                             action: TypeNotification.LikeToAnswerd
                         })
-                        console.log("mi notificado : ", getComment[0].user.toString());
+                        //console.log("mi notificado : ", getComment[0].user.toString());
                         sendSSEToUser(getComment[0].user.toString(), result)
                     }
                     break;
