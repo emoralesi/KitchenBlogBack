@@ -15,7 +15,7 @@ import { getUserbyId, getUserbyUsename, obtenerDatosRecAndFav, obtenerFavouriteB
 import { getUtencilios, saveUtencilio } from '../dao/UtencilioDao.js';
 import Usuario from '../models/usuarioModel.js';
 import { guardarComment, saveUpdateReactionComment } from '../services/CommentService.js';
-import { obtenerNotificationes } from '../services/NotificationService.js';
+import { obtenerNotificationes, readedActionNotification } from '../services/NotificationService.js';
 import { actualizarReceta, GetFullRecetaById, GetRecetasByIdUser, guardarReceta, saveUpdateReactionReceta } from '../services/RecetaService.js';
 import { getUserDescubrir, LoginUser, saveUpdateFavourite, UserRegister } from '../services/UserService.js';
 import { sendEmail } from '../utils/sendEmail.js';
@@ -226,6 +226,15 @@ app.post('/saveComentario', authMiddleware, async (req, res) => {
 app.post('/obtenerNotificaciones', authMiddleware, async (req, res) => {
     try {
         return await obtenerNotificationes(req.body, res);
+    } catch (error) {
+        console.error('Error al obtener notificaciones:', error);
+        return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });
+    }
+})
+
+app.post('/readedNotification', authMiddleware, async (req, res) => {
+    try {
+        return await readedActionNotification(req.body, res);
     } catch (error) {
         console.error('Error al obtener notificaciones:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor al iniciar sesión' });

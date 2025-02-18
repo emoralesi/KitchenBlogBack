@@ -19,87 +19,123 @@ export const deleteNotification = async (idUser, idReceta, idReference, modelo) 
     }
 }
 
-export const getNotifications = async (idUser) => {
-
+export const getNotifications = async (idUser, page, limit) => {
     try {
         const idUserNotificated = new ObjectId(idUser);
+        const skip = (page - 1) * limit;
 
-        const notifications = Notification.aggregate([
+        const notificationsData = await Notification.aggregate([
             {
                 $match: {
-                    referenceModelo: {
-                        $in: ["Comentario", "Reaction"]
-                    },
+                    referenceModelo: { $in: ["Comentario", "Reaction"] },
                     user_notificated: idUserNotificated
                 }
             },
             {
-                $lookup: {
-                    from: "comments",
-                    localField: "reference_id",
-                    foreignField: "_id",
-                    as: "comment"
-                }
-            },
-            {
-                $lookup: {
-                    from: "reactions",
-                    localField: "reference_id",
-                    foreignField: "_id",
-                    as: "reaction"
-                }
-            },
-            {
-                $lookup: {
-                    from: "recetas",
-                    localField: "receta_id",
-                    foreignField: "_id",
-                    as: "receta"
-                }
-            },
-            {
-                $lookup: {
-                    from: "comments",
-                    localField: "comment.parentComment",
-                    foreignField: "_id",
-                    as: "parentComment"
-                }
-            },
-            {
-                $lookup: {
-                    from: "usuarios",
-                    localField: "user_action",
-                    foreignField: "_id",
-                    as: "user_action"
-                }
-            },
-            {
-                $unwind: {
-                    path: "$parentComment",
-                    preserveNullAndEmptyArrays: true
-                }
-            }
-            ,
-            {
-                $lookup: {
-                    from: "usuarios",
-                    localField: "parentComment.user",
-                    foreignField: "_id",
-                    as: "parentComment.user"
-                }
-            },
-            {
-                $project: {
-                    "user_action.password": 0,
-                    "user_action.favourite": 0,
-                    "parentComment.user.password": 0,
-                    "parentComment.user.favourite": 0
+                $facet: {
+                    totalCount: [{ $count: "count" }], // Total de notificaciones
+                    totalUnreadCount: [
+                        { $match: { readed: false } }, // Filtra solo las no leídas
+                        { $count: "count" }
+                    ],
+                    paginatedResults: [
+                        {
+                            $lookup: {
+                                from: "comments",
+                                localField: "reference_id",
+                                foreignField: "_id",
+                                as: "comment"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "reactions",
+                                localField: "reference_id",
+                                foreignField: "_id",
+                                as: "reaction"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "recetas",
+                                localField: "receta_id",
+                                foreignField: "_id",
+                                as: "receta"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "comments",
+                                localField: "comment.parentComment",
+                                foreignField: "_id",
+                                as: "parentComment"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "usuarios",
+                                localField: "user_action",
+                                foreignField: "_id",
+                                as: "user_action"
+                            }
+                        },
+                        {
+                            $unwind: {
+                                path: "$parentComment",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "usuarios",
+                                localField: "parentComment.user",
+                                foreignField: "_id",
+                                as: "parentComment.user"
+                            }
+                        },
+                        {
+                            $project: {
+                                "user_action.password": 0,
+                                "user_action.favourite": 0,
+                                "parentComment.user.password": 0,
+                                "parentComment.user.favourite": 0
+                            }
+                        },
+                        { $sort: { fecha_notificacion: -1 } }, // Ordenar por fecha descendente
+                        { $skip: skip },
+                        { $limit: limit }
+                    ]
                 }
             }
         ]);
-        return notifications
+
+        // Extraer los resultados de la consulta
+        const totalCount = notificationsData[0].totalCount[0]?.count || 0;
+        const totalUnreadCount = notificationsData[0].totalUnreadCount[0]?.count || 0;
+        const paginatedResults = notificationsData[0].paginatedResults;
+
+        return { totalCount, totalUnreadCount, notifications: paginatedResults };
     } catch (error) {
-        throw error
+        throw error;
+    }
+};
+
+
+export const NotiReaded = async (datos) => {
+    try {
+        console.log("mis datos", datos);
+
+        const resultado = await Notification.updateMany(
+            { _id: { $in: datos } },
+            { readed: true }
+        );
+
+        console.log("mi resultado", resultado);
+
+        return resultado
+    } catch (error) {
+        console.log(error);
+        throw new error;
     }
 }
 
