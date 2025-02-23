@@ -8,7 +8,7 @@ export const compareRecetas = (obj1, obj2) => {
         obj1.categoria !== obj2.categoria.toString() ||
         obj1.dificultad !== obj2.dificultad.toString() ||
         JSON.stringify(obj1.grupoIngrediente.sort()) !== JSON.stringify(obj2.grupoIngrediente.map(element => element.toString()).sort()) ||
-        JSON.stringify(obj1.images.sort()) !== JSON.stringify(obj2.images.sort()) ||
+        JSON.stringify(obj1.imagesRecipe.sort()) !== JSON.stringify(obj2.images.sort()) ||
         JSON.stringify(obj1.pasos.sort()) !== JSON.stringify(obj2.pasos.map(element => element.toString()).sort()) ||
         JSON.stringify(obj1.subCategoria.sort()) !== JSON.stringify(obj2.subCategoria.map(element => element.toString()).sort()) ||
         JSON.stringify(obj1.utencilio.sort()) !== JSON.stringify(obj2.utencilio.map(element => element.toString()).sort())

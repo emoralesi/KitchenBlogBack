@@ -42,7 +42,7 @@ const { v2: cloudinary } = pkg;
 cloudinary.config({
     cloud_name: 'dhkttsgtq',
     api_key: '134496632225334',
-    api_secret: 'vMp7YF2trsIqrsz4h4-U7xdf3oU',  // Reemplaza con tu clave secreta
+    api_secret: 'vMp7YF2trsIqrsz4h4-U7xdf3oU',
 });
 
 
@@ -186,10 +186,12 @@ app.post('/saveReceta', authMiddleware, upload.fields([{ name: 'recipeImages', m
     }
 });
 
-app.post('/updateReceta', authMiddleware, async (req, res) => {
+app.post('/updateReceta', authMiddleware, upload.fields([{ name: 'recipeImages', maxCount: 10 }]), async (req, res) => {
     try {
+        const recipeImages = req.files['recipeImages'];
+        const receta = JSON.parse(req.body.receta);
 
-        return await actualizarReceta(req.body, res)
+        return await actualizarReceta(receta, recipeImages, res, cloudinary)
 
     } catch (error) {
         console.error('Error al updateReceta:', error);

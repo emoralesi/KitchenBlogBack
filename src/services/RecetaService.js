@@ -195,11 +195,11 @@ export const guardarReceta = async (params, res, imageRecipes, imageSteps, cloud
     }
 }
 
-export const actualizarReceta = async (params, res) => {
+export const actualizarReceta = async (params, recipeImages, res, cloudinary) => {
 
     const session = await mongoose.startSession();
     session.startTransaction();
-    console.log("mi params", params);
+    // console.log("mi params", params);
     try {
         var gruposId = [];
         for (const values of params.grupoIngrediente) {
@@ -267,14 +267,48 @@ export const actualizarReceta = async (params, res) => {
 
         const originalReceta = await getRecetaById(params._id)
 
-        console.log(originalReceta);
-        console.log(params);
-        params.images = originalReceta.images;
+        console.log("receta original", originalReceta);
+        // console.log(params);
+
         params.favourite = originalReceta.favourite;
+        params.images = params.imagesRecipe?.filter(elemento => typeof elemento === 'string')
 
         var newReceta = null;
 
-        if (!compareRecetas(params, originalReceta)) {
+        if (!compareRecetas(params, originalReceta) || recipeImages !== undefined) {
+
+            originalReceta.images.forEach(elemento => {
+                if (!params.images.includes(elemento)) {
+                    //Eliminamos de Cloudinary las imagenes que ya no existan en la receta
+                    const publicId = elemento.substring(elemento.lastIndexOf('/') + 1, elemento.lastIndexOf('.'));
+                    const folder = elemento.substring(elemento.indexOf('Recipe_images'), elemento.lastIndexOf('/'));
+                    const fullPublicId = folder + "/" + publicId;
+
+                    cloudinary.uploader.destroy(fullPublicId, (error, result) => {
+                        if (error) {
+                            console.error('Error al eliminar imagen de Cloudinary:', error);
+                        } else {
+                            console.log('Imagen eliminada de Cloudinary:', result);
+                        }
+                    });
+                }
+            });
+
+            if (recipeImages !== undefined) {
+                for (const file of recipeImages) {
+
+                    const optimizedUrl = await cloudinary.uploader.upload(file.path, {
+                        folder: 'Recipe_images',
+                        format: 'png',
+                        fetch_format: 'auto',
+                        quality: 'auto',
+                        asset_folder: 'Recipe_images'
+                    });
+                    console.log("mi OptimizedUrlObject", optimizedUrl);
+
+                    params.images.push(optimizedUrl.url);  // Agrega la URL de la imagen subida
+                }
+            }
             newReceta = await updateReceta(params);
         }
 
