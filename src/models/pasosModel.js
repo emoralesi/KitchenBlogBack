@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const reactionSchema = new mongoose.Schema({
     pasoNumero: { type: Number },
-    descripcion: { type: String },
+    descripcion: { type: String, maxlength: 250 },
     imageStep: []
 });
 

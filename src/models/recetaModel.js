@@ -1,8 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
 
 const recetaSchema = new mongoose.Schema({
-  titulo: String,
-  descripcion: String,
+  titulo: {
+    type: String,
+    maxlength: 50
+  },
+  descripcion: {
+    type: String,
+    maxlength: 250
+  },
   images: [],
   hours: {
     type: Number,
@@ -32,13 +38,6 @@ const recetaSchema = new mongoose.Schema({
   active: Boolean
 });
 
-// Método para obtener la duración formateada
-// recetaSchema.methods.getFormattedDuration = function() {
-//   const totalMinutes = (this.hours * 60) + this.minutes;
-//   const h = Math.floor(totalMinutes / 60);
-//   const m = totalMinutes % 60;
-//   return h > 0 ? `${h}h ${m}min` : `${m}min`;
-// };
 
 const Receta = mongoose.model('Receta', recetaSchema);
 
