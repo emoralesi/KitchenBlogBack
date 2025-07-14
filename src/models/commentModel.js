@@ -8,7 +8,11 @@ const commentSchema = new mongoose.Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   receta: { type: Schema.Types.ObjectId, ref: 'Receta' },
   reactions: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  parentComment: { type: Schema.Types.ObjectId, ref: 'Comment' }
+  parentComment: { type: Schema.Types.ObjectId, ref: 'Comment' },
+  dateComment: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 const Comment = mongoose.model('Comment', commentSchema);
