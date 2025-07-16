@@ -83,7 +83,7 @@ export const getRecetasInfo = async (page, limit, filters) => {
     let ingredienteMatch = {};
 
     if (filters?.titulo) {
-      match.titulo = { $regex: filters?.titulo, $options: "i" }; // Busca el título que contenga el texto, insensible a mayúsculas/minúsculas
+      match.titulo = { $regex: filters?.titulo, $options: "i" };
     }
 
     if (filters?.dificultad) {
