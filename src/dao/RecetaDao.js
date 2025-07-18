@@ -75,7 +75,7 @@ export const getRecetaById = async (idReceta) => {
   return updatedUser;
 };
 
-export const getRecetasInfo = async (page, limit, filters) => {
+export const getRecetasInfo = async (page, limit, filters, orderBy) => {
   const skip = (page - 1) * limit;
 
   try {
@@ -83,40 +83,28 @@ export const getRecetasInfo = async (page, limit, filters) => {
     let ingredienteMatch = {};
 
     if (filters?.titulo) {
-      match.titulo = { $regex: filters?.titulo, $options: "i" };
+      match.titulo = { $regex: filters.titulo, $options: "i" };
     }
 
     if (filters?.dificultad) {
-      const dificultadId = new ObjectId(filters.dificultad);
-      match.dificultad = { $eq: dificultadId };
+      match.dificultad = { $eq: new ObjectId(filters.dificultad) };
     }
 
     if (filters?.categoria) {
-      const categoriaId = new ObjectId(filters.categoria);
-      match.categoria = { $eq: categoriaId };
+      match.categoria = { $eq: new ObjectId(filters.categoria) };
     }
 
-    console.log(
-      "deberia ser true",
-      filters?.subCategoria && filters?.subCategoria.length > 0
-    );
-
-    if (filters?.subCategoria && filters?.subCategoria.length > 0) {
+    if (filters?.subCategoria?.length > 0) {
       const subCategoriasModificadas = filters.subCategoria.map(
-        (element) => new ObjectId(element)
+        (id) => new ObjectId(id)
       );
-
-      console.log("mi new categorias mod", subCategoriasModificadas);
-
-      match.subCategoria = { $all: subCategoriasModificadas }; // Filtra por las categorías especificadas
+      match.subCategoria = { $all: subCategoriasModificadas };
     }
 
     if (filters?.ingredientes?.length > 0) {
       const ingredienteModificado = filters.ingredientes.map(
-        (element) => new ObjectId(element)
+        (id) => new ObjectId(id)
       );
-
-      console.log("mi ingrediente mod", ingredienteModificado);
 
       ingredienteMatch = {
         "grupoIngrediente.item.ingrediente._id": {
@@ -124,6 +112,21 @@ export const getRecetasInfo = async (page, limit, filters) => {
         },
       };
     }
+
+    const order = orderBy?.orderBy || "relevante";
+    const direction = orderBy?.direction === "asc" ? 1 : -1;
+
+    const sortFieldMap = {
+      cantidadLike: "reactionsCount",
+      cantidadComentarios: "commentsCount",
+      cantidadGuardados: "favouritesCount",
+      relevante: "relevanteScore",
+    };
+
+    const sortField = sortFieldMap[order] || "relevanteScore";
+
+    console.log("mi orderby", orderBy);
+
     const recetas = await Receta.aggregate([
       {
         $match: match,
@@ -551,10 +554,24 @@ export const getRecetasInfo = async (page, limit, filters) => {
               },
             },
             {
-              $sort: {
-                fechaReceta: -1,
+              $addFields: {
+                reactionsCount: { $size: { $ifNull: ["$reactions", []] } },
+                favouritesCount: { $size: { $ifNull: ["$favourite", []] } },
+                commentsCount: { $size: { $ifNull: ["$comments", []] } },
               },
             },
+            {
+              $addFields: {
+                relevanteScore: {
+                  $add: [
+                    { $multiply: ["$reactionsCount", 2] },
+                    { $multiply: ["$favouritesCount", 2] },
+                    "$commentsCount",
+                  ],
+                },
+              },
+            },
+            { $sort: { [sortField]: direction, fechaReceta: -1 } },
             {
               $match: ingredienteMatch,
             },

@@ -1093,7 +1093,6 @@ export const getUsersDescovery = async (data) => {
           },
         },
       },
-      // Aquí se agrega el filtro para asegurarse que solo los usuarios con recetasCount > 0 se incluyan
       {
         $match: {
           recetasCount: { $gt: 0 },

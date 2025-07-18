@@ -460,7 +460,7 @@ app.post('/obtenerFavourite', authMiddleware, async (req, res) => {
 
 app.post('/obtenerRecetasinfo', authMiddleware, async (req, res) => {
     try {
-        const Recetas = await getRecetasInfo(req.body.page, req.body.limit, req.body.filter);
+        const Recetas = await getRecetasInfo(req.body.page, req.body.limit, req.body.filter, req.body.orderBy);
         console.log("mi Recetas", Recetas);
 
         if (Recetas.recetas?.length > 0) {
