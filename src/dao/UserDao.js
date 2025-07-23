@@ -233,6 +233,50 @@ export const obtenerFavouriteByIdUser = async (idUser, page, limit) => {
         $unwind: "$item",
       },
       {
+        $unwind: {
+          path: "$item.alternativas",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "ingredientes",
+          localField: "item.alternativas.ingrediente",
+          foreignField: "_id",
+          as: "item.alternativas.ingrediente",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.alternativas.ingrediente",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            itemId: "$item._id",
+            docId: "$_id",
+          },
+          root: {
+            $first: "$$ROOT",
+          },
+          alternativas: {
+            $push: "$item.alternativas.ingrediente",
+          },
+        },
+      },
+      {
+        $addFields: {
+          "root.item.alternativas": "$alternativas",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$root",
+        },
+      },
+      {
         $lookup: {
           from: "medidas",
           localField: "item.medida",
@@ -242,6 +286,20 @@ export const obtenerFavouriteByIdUser = async (idUser, page, limit) => {
       },
       {
         $unwind: "$item.medida",
+      },
+      {
+        $lookup: {
+          from: "presentacions",
+          localField: "item.presentacion",
+          foreignField: "_id",
+          as: "item.presentacion",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.presentacion",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $lookup: {
@@ -273,6 +331,8 @@ export const obtenerFavouriteByIdUser = async (idUser, page, limit) => {
               medida: "$item.medida",
               ingrediente: "$item.ingrediente",
               valor: "$item.valor",
+              presentacion: "$item.presentacion",
+              alternativas: "$item.alternativas",
             },
           },
           email: {
@@ -764,6 +824,50 @@ export const obtenerRecetaByIdUser = async (idUser, page, limit) => {
         $unwind: "$item",
       },
       {
+        $unwind: {
+          path: "$item.alternativas",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "ingredientes",
+          localField: "item.alternativas.ingrediente",
+          foreignField: "_id",
+          as: "item.alternativas.ingrediente",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.alternativas.ingrediente",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            itemId: "$item._id",
+            docId: "$_id",
+          },
+          root: {
+            $first: "$$ROOT",
+          },
+          alternativas: {
+            $push: "$item.alternativas.ingrediente",
+          },
+        },
+      },
+      {
+        $addFields: {
+          "root.item.alternativas": "$alternativas",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$root",
+        },
+      },
+      {
         $lookup: {
           from: "medidas",
           localField: "item.medida",
@@ -773,6 +877,20 @@ export const obtenerRecetaByIdUser = async (idUser, page, limit) => {
       },
       {
         $unwind: "$item.medida",
+      },
+      {
+        $lookup: {
+          from: "presentacions",
+          localField: "item.presentacion",
+          foreignField: "_id",
+          as: "item.presentacion",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.presentacion",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $lookup: {
@@ -804,6 +922,8 @@ export const obtenerRecetaByIdUser = async (idUser, page, limit) => {
               medida: "$item.medida",
               ingrediente: "$item.ingrediente",
               valor: "$item.valor",
+              presentacion: "$item.presentacion",
+              alternativas: "$item.alternativas",
             },
           },
           email: {

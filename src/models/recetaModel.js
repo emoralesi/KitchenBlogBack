@@ -7,7 +7,7 @@ const recetaSchema = new mongoose.Schema({
   },
   descripcion: {
     type: String,
-    maxlength: 250
+    maxlength: 500
   },
   images: [],
   hours: {

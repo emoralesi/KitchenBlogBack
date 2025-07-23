@@ -313,6 +313,50 @@ export const getRecetasInfo = async (page, limit, filters, orderBy) => {
               $unwind: "$item",
             },
             {
+              $unwind: {
+                path: "$item.alternativas",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $lookup: {
+                from: "ingredientes",
+                localField: "item.alternativas.ingrediente",
+                foreignField: "_id",
+                as: "item.alternativas.ingrediente",
+              },
+            },
+            {
+              $unwind: {
+                path: "$item.alternativas.ingrediente",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  itemId: "$item._id",
+                  docId: "$_id",
+                },
+                root: {
+                  $first: "$$ROOT",
+                },
+                alternativas: {
+                  $push: "$item.alternativas.ingrediente",
+                },
+              },
+            },
+            {
+              $addFields: {
+                "root.item.alternativas": "$alternativas",
+              },
+            },
+            {
+              $replaceRoot: {
+                newRoot: "$root",
+              },
+            },
+            {
               $lookup: {
                 from: "medidas",
                 localField: "item.medida",
@@ -322,6 +366,20 @@ export const getRecetasInfo = async (page, limit, filters, orderBy) => {
             },
             {
               $unwind: "$item.medida",
+            },
+            {
+              $lookup: {
+                from: "presentacions",
+                localField: "item.presentacion",
+                foreignField: "_id",
+                as: "item.presentacion",
+              },
+            },
+            {
+              $unwind: {
+                path: "$item.presentacion",
+                preserveNullAndEmptyArrays: true,
+              },
             },
             {
               $lookup: {
@@ -353,6 +411,8 @@ export const getRecetasInfo = async (page, limit, filters, orderBy) => {
                     medida: "$item.medida",
                     ingrediente: "$item.ingrediente",
                     valor: "$item.valor",
+                    presentacion: "$item.presentacion",
+                    alternativas: "$item.alternativas",
                   },
                 },
                 titulo: {
@@ -648,6 +708,50 @@ export const getRecetaComentReactions = async (idReceta) => {
         $unwind: "$item",
       },
       {
+        $unwind: {
+          path: "$item.alternativas",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "ingredientes",
+          localField: "item.alternativas.ingrediente",
+          foreignField: "_id",
+          as: "item.alternativas.ingrediente",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.alternativas.ingrediente",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            itemId: "$item._id",
+            docId: "$_id",
+          },
+          root: {
+            $first: "$$ROOT",
+          },
+          alternativas: {
+            $push: "$item.alternativas.ingrediente",
+          },
+        },
+      },
+      {
+        $addFields: {
+          "root.item.alternativas": "$alternativas",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$root",
+        },
+      },
+      {
         $lookup: {
           from: "medidas",
           localField: "item.medida",
@@ -657,6 +761,20 @@ export const getRecetaComentReactions = async (idReceta) => {
       },
       {
         $unwind: "$item.medida",
+      },
+      {
+        $lookup: {
+          from: "presentacions",
+          localField: "item.presentacion",
+          foreignField: "_id",
+          as: "item.presentacion",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.presentacion",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $lookup: {
@@ -688,6 +806,8 @@ export const getRecetaComentReactions = async (idReceta) => {
               medida: "$item.medida",
               ingrediente: "$item.ingrediente",
               valor: "$item.valor",
+              presentacion: "$item.presentacion",
+              alternativas: "$item.alternativas",
             },
           },
           titulo: {
@@ -1076,6 +1196,50 @@ export const getIngredientesByReceta = async (idReceta) => {
         $unwind: "$item",
       },
       {
+        $unwind: {
+          path: "$item.alternativas",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "ingredientes",
+          localField: "item.alternativas.ingrediente",
+          foreignField: "_id",
+          as: "item.alternativas.ingrediente",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.alternativas.ingrediente",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            itemId: "$item._id",
+            docId: "$_id",
+          },
+          root: {
+            $first: "$$ROOT",
+          },
+          alternativas: {
+            $push: "$item.alternativas.ingrediente",
+          },
+        },
+      },
+      {
+        $addFields: {
+          "root.item.alternativas": "$alternativas",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$root",
+        },
+      },
+      {
         $lookup: {
           from: "medidas",
           localField: "item.medida",
@@ -1085,6 +1249,20 @@ export const getIngredientesByReceta = async (idReceta) => {
       },
       {
         $unwind: "$item.medida",
+      },
+      {
+        $lookup: {
+          from: "presentacions",
+          localField: "item.presentacion",
+          foreignField: "_id",
+          as: "item.presentacion",
+        },
+      },
+      {
+        $unwind: {
+          path: "$item.presentacion",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $lookup: {
@@ -1116,6 +1294,8 @@ export const getIngredientesByReceta = async (idReceta) => {
               medida: "$item.medida",
               ingrediente: "$item.ingrediente",
               valor: "$item.valor",
+              presentacion: "$item.presentacion",
+              alternativas: "$item.alternativas",
             },
           },
           titulo: {
@@ -1268,6 +1448,17 @@ export const obtenerShopping = async (idRecetas) => {
       },
       {
         $unwind: "$grupoIngrediente.items",
+      },
+      {
+        $lookup: {
+          from: "presentacions",
+          localField: "grupoIngrediente.items.presentacion",
+          foreignField: "_id",
+          as: "grupoIngrediente.items.presentacion",
+        },
+      },
+      {
+        $unwind: "$grupoIngrediente.items.presentacion",
       },
       {
         $lookup: {

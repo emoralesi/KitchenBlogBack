@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 const reactionSchema = new mongoose.Schema({
-    nombreCategoria: { type: String }
+    nombreCategoria: { type: String, unique: true }
 });
 
 const Categoria = mongoose.model('Categoria', reactionSchema);

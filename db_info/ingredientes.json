@@ -1,704 +1,1109 @@
 [
-    {
-        "nombreIngrediente": "salt"
-    },
-    {
-        "nombreIngrediente": "pepper"
-    },
-    {
-        "nombreIngrediente": "olive oil"
-    },
-    {
-        "nombreIngrediente": "butter"
-    },
-    {
-        "nombreIngrediente": "garlic"
-    },
-    {
-        "nombreIngrediente": "onion"
-    },
-    {
-        "nombreIngrediente": "carrot"
-    },
-    {
-        "nombreIngrediente": "potato"
-    },
-    {
-        "nombreIngrediente": "tomato"
-    },
-    {
-        "nombreIngrediente": "chicken"
-    },
-    {
-        "nombreIngrediente": "beef"
-    },
-    {
-        "nombreIngrediente": "pork"
-    },
-    {
-        "nombreIngrediente": "lamb"
-    },
-    {
-        "nombreIngrediente": "fish"
-    },
-    {
-        "nombreIngrediente": "eggs"
-    },
-    {
-        "nombreIngrediente": "milk"
-    },
-    {
-        "nombreIngrediente": "cream"
-    },
-    {
-        "nombreIngrediente": "cheese"
-    },
-    {
-        "nombreIngrediente": "bread"
-    },
-    {
-        "nombreIngrediente": "flour"
-    },
-    {
-        "nombreIngrediente": "sugar"
-    },
-    {
-        "nombreIngrediente": "yeast"
-    },
-    {
-        "nombreIngrediente": "pasta"
-    },
-    {
-        "nombreIngrediente": "rice"
-    },
-    {
-        "nombreIngrediente": "beans"
-    },
-    {
-        "nombreIngrediente": "lentils"
-    },
-    {
-        "nombreIngrediente": "peas"
-    },
-    {
-        "nombreIngrediente": "broccoli"
-    },
-    {
-        "nombreIngrediente": "spinach"
-    },
-    {
-        "nombreIngrediente": "lettuce"
-    },
-    {
-        "nombreIngrediente": "cucumber"
-    },
-    {
-        "nombreIngrediente": "bell pepper"
-    },
-    {
-        "nombreIngrediente": "mushroom"
-    },
-    {
-        "nombreIngrediente": "apple"
-    },
-    {
-        "nombreIngrediente": "banana"
-    },
-    {
-        "nombreIngrediente": "orange"
-    },
-    {
-        "nombreIngrediente": "lemon"
-    },
-    {
-        "nombreIngrediente": "lime"
-    },
-    {
-        "nombreIngrediente": "strawberry"
-    },
-    {
-        "nombreIngrediente": "raspberry"
-    },
-    {
-        "nombreIngrediente": "blueberry"
-    },
-    {
-        "nombreIngrediente": "blackberry"
-    },
-    {
-        "nombreIngrediente": "grape"
-    },
-    {
-        "nombreIngrediente": "cherry"
-    },
-    {
-        "nombreIngrediente": "pear"
-    },
-    {
-        "nombreIngrediente": "peach"
-    },
-    {
-        "nombreIngrediente": "plum"
-    },
-    {
-        "nombreIngrediente": "kiwi"
-    },
-    {
-        "nombreIngrediente": "melon"
-    },
-    {
-        "nombreIngrediente": "watermelon"
-    },
-    {
-        "nombreIngrediente": "pumpkin"
-    },
-    {
-        "nombreIngrediente": "zucchini"
-    },
-    {
-        "nombreIngrediente": "corn"
-    },
-    {
-        "nombreIngrediente": "celery"
-    },
-    {
-        "nombreIngrediente": "parsley"
-    },
-    {
-        "nombreIngrediente": "cilantro"
-    },
-    {
-        "nombreIngrediente": "basil"
-    },
-    {
-        "nombreIngrediente": "thyme"
-    },
-    {
-        "nombreIngrediente": "rosemary"
-    },
-    {
-        "nombreIngrediente": "oregano"
-    },
-    {
-        "nombreIngrediente": "bay leaf"
-    },
-    {
-        "nombreIngrediente": "sage"
-    },
-    {
-        "nombreIngrediente": "mint"
-    },
-    {
-        "nombreIngrediente": "dill"
-    },
-    {
-        "nombreIngrediente": "cumin"
-    },
-    {
-        "nombreIngrediente": "coriander"
-    },
-    {
-        "nombreIngrediente": "paprika"
-    },
-    {
-        "nombreIngrediente": "turmeric"
-    },
-    {
-        "nombreIngrediente": "ginger"
-    },
-    {
-        "nombreIngrediente": "cinnamon"
-    },
-    {
-        "nombreIngrediente": "nutmeg"
-    },
-    {
-        "nombreIngrediente": "clove"
-    },
-    {
-        "nombreIngrediente": "cardamom"
-    },
-    {
-        "nombreIngrediente": "saffron"
-    },
-    {
-        "nombreIngrediente": "vanilla"
-    },
-    {
-        "nombreIngrediente": "honey"
-    },
-    {
-        "nombreIngrediente": "maple syrup"
-    },
-    {
-        "nombreIngrediente": "vinegar"
-    },
-    {
-        "nombreIngrediente": "soy sauce"
-    },
-    {
-        "nombreIngrediente": "mustard"
-    },
-    {
-        "nombreIngrediente": "ketchup"
-    },
-    {
-        "nombreIngrediente": "mayonnaise"
-    },
-    {
-        "nombreIngrediente": "chili"
-    },
-    {
-        "nombreIngrediente": "coconut"
-    },
-    {
-        "nombreIngrediente": "almond"
-    },
-    {
-        "nombreIngrediente": "walnut"
-    },
-    {
-        "nombreIngrediente": "peanut"
-    },
-    {
-        "nombreIngrediente": "hazelnut"
-    },
-    {
-        "nombreIngrediente": "cashew"
-    },
-    {
-        "nombreIngrediente": "pistachio"
-    },
-    {
-        "nombreIngrediente": "pecan"
-    },
-    {
-        "nombreIngrediente": "sunflower seeds"
-    },
-    {
-        "nombreIngrediente": "pumpkin seeds"
-    },
-    {
-        "nombreIngrediente": "sesame seeds"
-    },
-    {
-        "nombreIngrediente": "chia seeds"
-    },
-    {
-        "nombreIngrediente": "quinoa"
-    },
-    {
-        "nombreIngrediente": "oats"
-    },
-    {
-        "nombreIngrediente": "barley"
-    },
-    {
-        "nombreIngrediente": "rye"
-    },
-    {
-        "nombreIngrediente": "spelt"
-    },
-    {
-        "nombreIngrediente": "couscous"
-    },
-    {
-        "nombreIngrediente": "polenta"
-    },
-    {
-        "nombreIngrediente": "bulgur"
-    },
-    {
-        "nombreIngrediente": "bread crumbs"
-    },
-    {
-        "nombreIngrediente": "cream cheese"
-    },
-    {
-        "nombreIngrediente": "yogurt"
-    },
-    {
-        "nombreIngrediente": "sour cream"
-    },
-    {
-        "nombreIngrediente": "cottage cheese"
-    },
-    {
-        "nombreIngrediente": "parmesan"
-    },
-    {
-        "nombreIngrediente": "mozzarella"
-    },
-    {
-        "nombreIngrediente": "cheddar"
-    },
-    {
-        "nombreIngrediente": "feta"
-    },
-    {
-        "nombreIngrediente": "goat cheese"
-    },
-    {
-        "nombreIngrediente": "blue cheese"
-    },
-    {
-        "nombreIngrediente": "camembert"
-    },
-    {
-        "nombreIngrediente": "brie"
-    },
-    {
-        "nombreIngrediente": "ricotta"
-    },
-    {
-        "nombreIngrediente": "tofu"
-    },
-    {
-        "nombreIngrediente": "tempeh"
-    },
-    {
-        "nombreIngrediente": "seitan"
-    },
-    {
-        "nombreIngrediente": "miso"
-    },
-    {
-        "nombreIngrediente": "nori"
-    },
-    {
-        "nombreIngrediente": "wasabi"
-    },
-    {
-        "nombreIngrediente": "sake"
-    },
-    {
-        "nombreIngrediente": "beer"
-    },
-    {
-        "nombreIngrediente": "wine"
-    },
-    {
-        "nombreIngrediente": "whisky"
-    },
-    {
-        "nombreIngrediente": "vodka"
-    },
-    {
-        "nombreIngrediente": "gin"
-    },
-    {
-        "nombreIngrediente": "rum"
-    },
-    {
-        "nombreIngrediente": "tequila"
-    },
-    {
-        "nombreIngrediente": "cognac"
-    },
-    {
-        "nombreIngrediente": "brandy"
-    },
-    {
-        "nombreIngrediente": "liqueur"
-    },
-    {
-        "nombreIngrediente": "tea"
-    },
-    {
-        "nombreIngrediente": "coffee"
-    },
-    {
-        "nombreIngrediente": "cocoa"
-    },
-    {
-        "nombreIngrediente": "chocolate"
-    },
-    {
-        "nombreIngrediente": "marzipan"
-    },
-    {
-        "nombreIngrediente": "nougat"
-    },
-    {
-        "nombreIngrediente": "gelatin"
-    },
-    {
-        "nombreIngrediente": "agar agar"
-    },
-    {
-        "nombreIngrediente": "pectin"
-    },
-    {
-        "nombreIngrediente": "baking powder"
-    },
-    {
-        "nombreIngrediente": "baking soda"
-    },
-    {
-        "nombreIngrediente": "cream of tartar"
-    },
-    {
-        "nombreIngrediente": "cornstarch"
-    },
-    {
-        "nombreIngrediente": "potato starch"
-    },
-    {
-        "nombreIngrediente": "arrowroot"
-    },
-    {
-        "nombreIngrediente": "tapioca"
-    },
-    {
-        "nombreIngrediente": "sago"
-    },
-    {
-        "nombreIngrediente": "bread flour"
-    },
-    {
-        "nombreIngrediente": "cake flour"
-    },
-    {
-        "nombreIngrediente": "self-raising flour"
-    },
-    {
-        "nombreIngrediente": "wholemeal flour"
-    },
-    {
-        "nombreIngrediente": "buckwheat flour"
-    },
-    {
-        "nombreIngrediente": "almond flour"
-    },
-    {
-        "nombreIngrediente": "coconut flour"
-    },
-    {
-        "nombreIngrediente": "rice flour"
-    },
-    {
-        "nombreIngrediente": "corn flour"
-    },
-    {
-        "nombreIngrediente": "chickpea flour"
-    },
-    {
-        "nombreIngrediente": "spelt flour"
-    },
-    {
-        "nombreIngrediente": "semolina"
-    },
-    {
-        "nombreIngrediente": "gluten-free flour"
-    },
-    {
-        "nombreIngrediente": "mashed potato"
-    },
-    {
-        "nombreIngrediente": "gravy"
-    },
-    {
-        "nombreIngrediente": "stock"
-    },
-    {
-        "nombreIngrediente": "broth"
-    },
-    {
-        "nombreIngrediente": "soup"
-    },
-    {
-        "nombreIngrediente": "stew"
-    },
-    {
-        "nombreIngrediente": "casserole"
-    },
-    {
-        "nombreIngrediente": "curry"
-    },
-    {
-        "nombreIngrediente": "salsa"
-    },
-    {
-        "nombreIngrediente": "relish"
-    },
-    {
-        "nombreIngrediente": "chutney"
-    },
-    {
-        "nombreIngrediente": "jam"
-    },
-    {
-        "nombreIngrediente": "marmalade"
-    },
-    {
-        "nombreIngrediente": "pickles"
-    },
-    {
-        "nombreIngrediente": "olives"
-    },
-    {
-        "nombreIngrediente": "capers"
-    },
-    {
-        "nombreIngrediente": "anchovies"
-    },
-    {
-        "nombreIngrediente": "sardines"
-    },
-    {
-        "nombreIngrediente": "tuna"
-    },
-    {
-        "nombreIngrediente": "salmon"
-    },
-    {
-        "nombreIngrediente": "mackerel"
-    },
-    {
-        "nombreIngrediente": "herring"
-    },
-    {
-        "nombreIngrediente": "cod"
-    },
-    {
-        "nombreIngrediente": "haddock"
-    },
-    {
-        "nombreIngrediente": "trout"
-    },
-    {
-        "nombreIngrediente": "prawn"
-    },
-    {
-        "nombreIngrediente": "shrimp"
-    },
-    {
-        "nombreIngrediente": "lobster"
-    },
-    {
-        "nombreIngrediente": "crab"
-    },
-    {
-        "nombreIngrediente": "scallops"
-    },
-    {
-        "nombreIngrediente": "mussels"
-    },
-    {
-        "nombreIngrediente": "oysters"
-    },
-    {
-        "nombreIngrediente": "calamari"
-    },
-    {
-        "nombreIngrediente": "octopus"
-    },
-    {
-        "nombreIngrediente": "squid"
-    },
-    {
-        "nombreIngrediente": "liver"
-    },
-    {
-        "nombreIngrediente": "kidney"
-    },
-    {
-        "nombreIngrediente": "tripe"
-    },
-    {
-        "nombreIngrediente": "tongue"
-    },
-    {
-        "nombreIngrediente": "brain"
-    },
-    {
-        "nombreIngrediente": "bone marrow"
-    },
-    {
-        "nombreIngrediente": "sweetbreads"
-    },
-    {
-        "nombreIngrediente": "sausages"
-    },
-    {
-        "nombreIngrediente": "bacon"
-    },
-    {
-        "nombreIngrediente": "ham"
-    },
-    {
-        "nombreIngrediente": "prosciutto"
-    },
-    {
-        "nombreIngrediente": "salami"
-    },
-    {
-        "nombreIngrediente": "chorizo"
-    },
-    {
-        "nombreIngrediente": "pastrami"
-    },
-    {
-        "nombreIngrediente": "bresaola"
-    },
-    {
-        "nombreIngrediente": "pancetta"
-    },
-    {
-        "nombreIngrediente": "black pudding"
-    },
-    {
-        "nombreIngrediente": "haggis"
-    },
-    {
-        "nombreIngrediente": "meatballs"
-    },
-    {
-        "nombreIngrediente": "burger"
-    },
-    {
-        "nombreIngrediente": "kebab"
-    },
-    {
-        "nombreIngrediente": "shawarma"
-    },
-    {
-        "nombreIngrediente": "souvlaki"
-    },
-    {
-        "nombreIngrediente": "gyros"
-    },
-    {
-        "nombreIngrediente": "paella"
-    },
-    {
-        "nombreIngrediente": "risotto"
-    },
-    {
-        "nombreIngrediente": "pasta salad"
-    },
-    {
-        "nombreIngrediente": "macaroni"
-    },
-    {
-        "nombreIngrediente": "spaghetti"
-    },
-    {
-        "nombreIngrediente": "fettuccine"
-    },
-    {
-        "nombreIngrediente": "lasagna"
-    },
-    {
-        "nombreIngrediente": "ravioli"
-    },
-    {
-        "nombreIngrediente": "gnocchi"
-    },
-    {
-        "nombreIngrediente": "dumplings"
-    },
-    {
-        "nombreIngrediente": "wonton"
-    }
+  {
+    "nombreIngrediente": "aceite de coco"
+  },
+  {
+    "nombreIngrediente": "aceite de girasol"
+  },
+  {
+    "nombreIngrediente": "aceite de oliva"
+  },
+  {
+    "nombreIngrediente": "aceite vegetal"
+  },
+  {
+    "nombreIngrediente": "acelga"
+  },
+  {
+    "nombreIngrediente": "agua"
+  },
+  {
+    "nombreIngrediente": "ajo"
+  },
+  {
+    "nombreIngrediente": "albahaca"
+  },
+  {
+    "nombreIngrediente": "alcaparras"
+  },
+  {
+    "nombreIngrediente": "almendra"
+  },
+  {
+    "nombreIngrediente": "almibar"
+  },
+  {
+    "nombreIngrediente": "almidon de maiz"
+  },
+  {
+    "nombreIngrediente": "anchoas"
+  },
+  {
+    "nombreIngrediente": "anises"
+  },
+  {
+    "nombreIngrediente": "apio"
+  },
+  {
+    "nombreIngrediente": "arandanos"
+  },
+  {
+    "nombreIngrediente": "arandanos secos"
+  },
+  {
+    "nombreIngrediente": "arroz"
+  },
+  {
+    "nombreIngrediente": "arvejas"
+  },
+  {
+    "nombreIngrediente": "atun"
+  },
+  {
+    "nombreIngrediente": "avena"
+  },
+  {
+    "nombreIngrediente": "azafran"
+  },
+  {
+    "nombreIngrediente": "azucar"
+  },
+  {
+    "nombreIngrediente": "azucar flor"
+  },
+  {
+    "nombreIngrediente": "azucar glass"
+  },
+  {
+    "nombreIngrediente": "azucar morena"
+  },
+  {
+    "nombreIngrediente": "bacon"
+  },
+  {
+    "nombreIngrediente": "balsamico"
+  },
+  {
+    "nombreIngrediente": "batata"
+  },
+  {
+    "nombreIngrediente": "berro"
+  },
+  {
+    "nombreIngrediente": "betarraga"
+  },
+  {
+    "nombreIngrediente": "bicarbonato de sodio"
+  },
+  {
+    "nombreIngrediente": "boniato"
+  },
+  {
+    "nombreIngrediente": "brandy"
+  },
+  {
+    "nombreIngrediente": "brocoli"
+  },
+  {
+    "nombreIngrediente": "caballa"
+  },
+  {
+    "nombreIngrediente": "cacahuate"
+  },
+  {
+    "nombreIngrediente": "cacao en polvo"
+  },
+  {
+    "nombreIngrediente": "cafe"
+  },
+  {
+    "nombreIngrediente": "calabacin"
+  },
+  {
+    "nombreIngrediente": "calabaza"
+  },
+  {
+    "nombreIngrediente": "calamares"
+  },
+  {
+    "nombreIngrediente": "caldo de carne"
+  },
+  {
+    "nombreIngrediente": "caldo de pollo"
+  },
+  {
+    "nombreIngrediente": "caldo de verduras"
+  },
+  {
+    "nombreIngrediente": "calendula"
+  },
+  {
+    "nombreIngrediente": "canela"
+  },
+  {
+    "nombreIngrediente": "canelones"
+  },
+  {
+    "nombreIngrediente": "cardamomo"
+  },
+  {
+    "nombreIngrediente": "carne de cerdo"
+  },
+  {
+    "nombreIngrediente": "carne de cordero"
+  },
+  {
+    "nombreIngrediente": "carne de pollo"
+  },
+  {
+    "nombreIngrediente": "carne de res"
+  },
+  {
+    "nombreIngrediente": "carne molida"
+  },
+  {
+    "nombreIngrediente": "carragenina"
+  },
+  {
+    "nombreIngrediente": "cascara de limon"
+  },
+  {
+    "nombreIngrediente": "cayena"
+  },
+  {
+    "nombreIngrediente": "cebolla"
+  },
+  {
+    "nombreIngrediente": "cebolla en polvo"
+  },
+  {
+    "nombreIngrediente": "cebollin"
+  },
+  {
+    "nombreIngrediente": "cereza"
+  },
+  {
+    "nombreIngrediente": "cerveza"
+  },
+  {
+    "nombreIngrediente": "champiñones"
+  },
+  {
+    "nombreIngrediente": "chauchas"
+  },
+  {
+    "nombreIngrediente": "cheddar"
+  },
+  {
+    "nombreIngrediente": "chile"
+  },
+  {
+    "nombreIngrediente": "chile en polvo"
+  },
+  {
+    "nombreIngrediente": "chilena"
+  },
+  {
+    "nombreIngrediente": "chirimoya"
+  },
+  {
+    "nombreIngrediente": "chirivias"
+  },
+  {
+    "nombreIngrediente": "chocolate"
+  },
+  {
+    "nombreIngrediente": "chocolate amargo"
+  },
+  {
+    "nombreIngrediente": "chocolate blanco"
+  },
+  {
+    "nombreIngrediente": "ciboulette"
+  },
+  {
+    "nombreIngrediente": "cilantro"
+  },
+  {
+    "nombreIngrediente": "cilantro fresco"
+  },
+  {
+    "nombreIngrediente": "ciruela pasa"
+  },
+  {
+    "nombreIngrediente": "ciruelas"
+  },
+  {
+    "nombreIngrediente": "clara de huevo"
+  },
+  {
+    "nombreIngrediente": "clavo"
+  },
+  {
+    "nombreIngrediente": "clavo de olor"
+  },
+  {
+    "nombreIngrediente": "coco"
+  },
+  {
+    "nombreIngrediente": "coco rallado"
+  },
+  {
+    "nombreIngrediente": "col china"
+  },
+  {
+    "nombreIngrediente": "col lombarda"
+  },
+  {
+    "nombreIngrediente": "col rizada"
+  },
+  {
+    "nombreIngrediente": "coliflor"
+  },
+  {
+    "nombreIngrediente": "coliflor baby"
+  },
+  {
+    "nombreIngrediente": "comino"
+  },
+  {
+    "nombreIngrediente": "condimentos"
+  },
+  {
+    "nombreIngrediente": "coriandro"
+  },
+  {
+    "nombreIngrediente": "crema acida"
+  },
+  {
+    "nombreIngrediente": "crema batida"
+  },
+  {
+    "nombreIngrediente": "crema de leche"
+  },
+  {
+    "nombreIngrediente": "crema fresca"
+  },
+  {
+    "nombreIngrediente": "crema pastelera"
+  },
+  {
+    "nombreIngrediente": "crotones"
+  },
+  {
+    "nombreIngrediente": "cuajada"
+  },
+  {
+    "nombreIngrediente": "curcuma"
+  },
+  {
+    "nombreIngrediente": "curri"
+  },
+  {
+    "nombreIngrediente": "daikon"
+  },
+  {
+    "nombreIngrediente": "dulce de leche"
+  },
+  {
+    "nombreIngrediente": "durazno"
+  },
+  {
+    "nombreIngrediente": "durazno en almibar"
+  },
+  {
+    "nombreIngrediente": "dátiles"
+  },
+  {
+    "nombreIngrediente": "edulcorante"
+  },
+  {
+    "nombreIngrediente": "elote"
+  },
+  {
+    "nombreIngrediente": "emmental"
+  },
+  {
+    "nombreIngrediente": "endibia"
+  },
+  {
+    "nombreIngrediente": "endivias"
+  },
+  {
+    "nombreIngrediente": "escalonia"
+  },
+  {
+    "nombreIngrediente": "especias"
+  },
+  {
+    "nombreIngrediente": "espinaca"
+  },
+  {
+    "nombreIngrediente": "espirulina"
+  },
+  {
+    "nombreIngrediente": "estragon"
+  },
+  {
+    "nombreIngrediente": "estragon fresco"
+  },
+  {
+    "nombreIngrediente": "fava"
+  },
+  {
+    "nombreIngrediente": "feta"
+  },
+  {
+    "nombreIngrediente": "fibra de trigo"
+  },
+  {
+    "nombreIngrediente": "fideos"
+  },
+  {
+    "nombreIngrediente": "filete de cerdo"
+  },
+  {
+    "nombreIngrediente": "filete de pollo"
+  },
+  {
+    "nombreIngrediente": "filete de salmon"
+  },
+  {
+    "nombreIngrediente": "flan"
+  },
+  {
+    "nombreIngrediente": "flor de azahar"
+  },
+  {
+    "nombreIngrediente": "frambuesa"
+  },
+  {
+    "nombreIngrediente": "frankfurt"
+  },
+  {
+    "nombreIngrediente": "fresas"
+  },
+  {
+    "nombreIngrediente": "fresca"
+  },
+  {
+    "nombreIngrediente": "frijoles"
+  },
+  {
+    "nombreIngrediente": "frutillas"
+  },
+  {
+    "nombreIngrediente": "frutos secos"
+  },
+  {
+    "nombreIngrediente": "galleta"
+  },
+  {
+    "nombreIngrediente": "garbanzo"
+  },
+  {
+    "nombreIngrediente": "gelatina sin sabor"
+  },
+  {
+    "nombreIngrediente": "ghee"
+  },
+  {
+    "nombreIngrediente": "glutamato monosodico"
+  },
+  {
+    "nombreIngrediente": "goma de guar"
+  },
+  {
+    "nombreIngrediente": "granada"
+  },
+  {
+    "nombreIngrediente": "granola"
+  },
+  {
+    "nombreIngrediente": "harina"
+  },
+  {
+    "nombreIngrediente": "harina de arroz"
+  },
+  {
+    "nombreIngrediente": "harina de avena"
+  },
+  {
+    "nombreIngrediente": "harina de garbanzo"
+  },
+  {
+    "nombreIngrediente": "harina de maiz"
+  },
+  {
+    "nombreIngrediente": "harina de trigo"
+  },
+  {
+    "nombreIngrediente": "harina integral"
+  },
+  {
+    "nombreIngrediente": "harina leudante"
+  },
+  {
+    "nombreIngrediente": "helado"
+  },
+  {
+    "nombreIngrediente": "higo"
+  },
+  {
+    "nombreIngrediente": "hinojo"
+  },
+  {
+    "nombreIngrediente": "hinojo fresco"
+  },
+  {
+    "nombreIngrediente": "huevo"
+  },
+  {
+    "nombreIngrediente": "huevos de codorniz"
+  },
+  {
+    "nombreIngrediente": "infusion de hierbas"
+  },
+  {
+    "nombreIngrediente": "jalapeño"
+  },
+  {
+    "nombreIngrediente": "jalea"
+  },
+  {
+    "nombreIngrediente": "jamon"
+  },
+  {
+    "nombreIngrediente": "jengibre"
+  },
+  {
+    "nombreIngrediente": "jicama"
+  },
+  {
+    "nombreIngrediente": "jugo de limon"
+  },
+  {
+    "nombreIngrediente": "jugo de naranja"
+  },
+  {
+    "nombreIngrediente": "jugo de uva"
+  },
+  {
+    "nombreIngrediente": "kale"
+  },
+  {
+    "nombreIngrediente": "ketchup"
+  },
+  {
+    "nombreIngrediente": "kion"
+  },
+  {
+    "nombreIngrediente": "kiwi"
+  },
+  {
+    "nombreIngrediente": "lactosa"
+  },
+  {
+    "nombreIngrediente": "langostinos"
+  },
+  {
+    "nombreIngrediente": "lasaña"
+  },
+  {
+    "nombreIngrediente": "laurel"
+  },
+  {
+    "nombreIngrediente": "leche"
+  },
+  {
+    "nombreIngrediente": "leche condensada"
+  },
+  {
+    "nombreIngrediente": "leche de almendras"
+  },
+  {
+    "nombreIngrediente": "leche de coco"
+  },
+  {
+    "nombreIngrediente": "leche de soya"
+  },
+  {
+    "nombreIngrediente": "leche evaporada"
+  },
+  {
+    "nombreIngrediente": "lechuga"
+  },
+  {
+    "nombreIngrediente": "lechuga romana"
+  },
+  {
+    "nombreIngrediente": "lemon grass"
+  },
+  {
+    "nombreIngrediente": "lentejas"
+  },
+  {
+    "nombreIngrediente": "levadura"
+  },
+  {
+    "nombreIngrediente": "levadura fresca"
+  },
+  {
+    "nombreIngrediente": "limon"
+  },
+  {
+    "nombreIngrediente": "limon en rodajas"
+  },
+  {
+    "nombreIngrediente": "lomo de cerdo"
+  },
+  {
+    "nombreIngrediente": "lomo vetado"
+  },
+  {
+    "nombreIngrediente": "maicena"
+  },
+  {
+    "nombreIngrediente": "malta"
+  },
+  {
+    "nombreIngrediente": "mango"
+  },
+  {
+    "nombreIngrediente": "manjar"
+  },
+  {
+    "nombreIngrediente": "manteca"
+  },
+  {
+    "nombreIngrediente": "manteca de cerdo"
+  },
+  {
+    "nombreIngrediente": "mantequilla"
+  },
+  {
+    "nombreIngrediente": "manzana"
+  },
+  {
+    "nombreIngrediente": "manzana roja"
+  },
+  {
+    "nombreIngrediente": "manzana verde"
+  },
+  {
+    "nombreIngrediente": "maracuya"
+  },
+  {
+    "nombreIngrediente": "mariscos"
+  },
+  {
+    "nombreIngrediente": "marshmallow"
+  },
+  {
+    "nombreIngrediente": "mayonesa"
+  },
+  {
+    "nombreIngrediente": "mayonesa casera"
+  },
+  {
+    "nombreIngrediente": "melaza"
+  },
+  {
+    "nombreIngrediente": "menta"
+  },
+  {
+    "nombreIngrediente": "merluza"
+  },
+  {
+    "nombreIngrediente": "mermelada"
+  },
+  {
+    "nombreIngrediente": "miel"
+  },
+  {
+    "nombreIngrediente": "milhojas"
+  },
+  {
+    "nombreIngrediente": "mostaza"
+  },
+  {
+    "nombreIngrediente": "mostaza en grano"
+  },
+  {
+    "nombreIngrediente": "naranja"
+  },
+  {
+    "nombreIngrediente": "nata"
+  },
+  {
+    "nombreIngrediente": "nata para montar"
+  },
+  {
+    "nombreIngrediente": "nuez"
+  },
+  {
+    "nombreIngrediente": "nuez moscada"
+  },
+  {
+    "nombreIngrediente": "nuez pecan"
+  },
+  {
+    "nombreIngrediente": "oregano"
+  },
+  {
+    "nombreIngrediente": "oregano fresco"
+  },
+  {
+    "nombreIngrediente": "palta"
+  },
+  {
+    "nombreIngrediente": "pan"
+  },
+  {
+    "nombreIngrediente": "pan rallado"
+  },
+  {
+    "nombreIngrediente": "papa blanca"
+  },
+  {
+    "nombreIngrediente": "papa dulce"
+  },
+  {
+    "nombreIngrediente": "papas"
+  },
+  {
+    "nombreIngrediente": "paprika"
+  },
+  {
+    "nombreIngrediente": "paprika ahumada"
+  },
+  {
+    "nombreIngrediente": "parmesano"
+  },
+  {
+    "nombreIngrediente": "pasas"
+  },
+  {
+    "nombreIngrediente": "pasta"
+  },
+  {
+    "nombreIngrediente": "pasta filo"
+  },
+  {
+    "nombreIngrediente": "pepino"
+  },
+  {
+    "nombreIngrediente": "pepino dill"
+  },
+  {
+    "nombreIngrediente": "pepitas"
+  },
+  {
+    "nombreIngrediente": "pepperoni"
+  },
+  {
+    "nombreIngrediente": "pescado"
+  },
+  {
+    "nombreIngrediente": "pescado blanco"
+  },
+  {
+    "nombreIngrediente": "pesto"
+  },
+  {
+    "nombreIngrediente": "pimienta"
+  },
+  {
+    "nombreIngrediente": "pimienta blanca"
+  },
+  {
+    "nombreIngrediente": "pimienta cayena"
+  },
+  {
+    "nombreIngrediente": "pimienta negra"
+  },
+  {
+    "nombreIngrediente": "pimienta rosa"
+  },
+  {
+    "nombreIngrediente": "pimiento"
+  },
+  {
+    "nombreIngrediente": "pistacho"
+  },
+  {
+    "nombreIngrediente": "piña"
+  },
+  {
+    "nombreIngrediente": "piña en almibar"
+  },
+  {
+    "nombreIngrediente": "piñones"
+  },
+  {
+    "nombreIngrediente": "platano"
+  },
+  {
+    "nombreIngrediente": "plátano maduro"
+  },
+  {
+    "nombreIngrediente": "pollo"
+  },
+  {
+    "nombreIngrediente": "pollo desmenuzado"
+  },
+  {
+    "nombreIngrediente": "pollo entero"
+  },
+  {
+    "nombreIngrediente": "pollo rostizado"
+  },
+  {
+    "nombreIngrediente": "pomelo"
+  },
+  {
+    "nombreIngrediente": "porotos"
+  },
+  {
+    "nombreIngrediente": "porotos negros"
+  },
+  {
+    "nombreIngrediente": "porotos verdes"
+  },
+  {
+    "nombreIngrediente": "puerro"
+  },
+  {
+    "nombreIngrediente": "queso"
+  },
+  {
+    "nombreIngrediente": "queso azul"
+  },
+  {
+    "nombreIngrediente": "queso brie"
+  },
+  {
+    "nombreIngrediente": "queso crema"
+  },
+  {
+    "nombreIngrediente": "queso gouda"
+  },
+  {
+    "nombreIngrediente": "queso mozzarella"
+  },
+  {
+    "nombreIngrediente": "queso parmesano"
+  },
+  {
+    "nombreIngrediente": "queso provolone"
+  },
+  {
+    "nombreIngrediente": "queso rallado"
+  },
+  {
+    "nombreIngrediente": "queso ricotta"
+  },
+  {
+    "nombreIngrediente": "quinoa"
+  },
+  {
+    "nombreIngrediente": "quinua"
+  },
+  {
+    "nombreIngrediente": "ramitas de apio"
+  },
+  {
+    "nombreIngrediente": "remolacha"
+  },
+  {
+    "nombreIngrediente": "remolacha en vinagre"
+  },
+  {
+    "nombreIngrediente": "repollo"
+  },
+  {
+    "nombreIngrediente": "ribes"
+  },
+  {
+    "nombreIngrediente": "ricota"
+  },
+  {
+    "nombreIngrediente": "romero"
+  },
+  {
+    "nombreIngrediente": "romero fresco"
+  },
+  {
+    "nombreIngrediente": "rosbif"
+  },
+  {
+    "nombreIngrediente": "rosbif en lonjas"
+  },
+  {
+    "nombreIngrediente": "sal"
+  },
+  {
+    "nombreIngrediente": "salchicha"
+  },
+  {
+    "nombreIngrediente": "salmon"
+  },
+  {
+    "nombreIngrediente": "salmón ahumado"
+  },
+  {
+    "nombreIngrediente": "salsa barbacoa"
+  },
+  {
+    "nombreIngrediente": "salsa de albahaca"
+  },
+  {
+    "nombreIngrediente": "salsa de chile"
+  },
+  {
+    "nombreIngrediente": "salsa de soya"
+  },
+  {
+    "nombreIngrediente": "salsa de tomate"
+  },
+  {
+    "nombreIngrediente": "salsa inglesa"
+  },
+  {
+    "nombreIngrediente": "salsa teriyaki"
+  },
+  {
+    "nombreIngrediente": "salsa tártara"
+  },
+  {
+    "nombreIngrediente": "salsas picantes"
+  },
+  {
+    "nombreIngrediente": "sandia"
+  },
+  {
+    "nombreIngrediente": "semillas de amapola"
+  },
+  {
+    "nombreIngrediente": "semillas de chia"
+  },
+  {
+    "nombreIngrediente": "semillas de girasol"
+  },
+  {
+    "nombreIngrediente": "semillas de lino"
+  },
+  {
+    "nombreIngrediente": "semillas de sésamo"
+  },
+  {
+    "nombreIngrediente": "sesamo"
+  },
+  {
+    "nombreIngrediente": "setas"
+  },
+  {
+    "nombreIngrediente": "sirope de arce"
+  },
+  {
+    "nombreIngrediente": "soja"
+  },
+  {
+    "nombreIngrediente": "soja texturizada"
+  },
+  {
+    "nombreIngrediente": "sopa instantanea"
+  },
+  {
+    "nombreIngrediente": "sorbete"
+  },
+  {
+    "nombreIngrediente": "suero de leche"
+  },
+  {
+    "nombreIngrediente": "surimi"
+  },
+  {
+    "nombreIngrediente": "sushi"
+  },
+  {
+    "nombreIngrediente": "sustituto de huevo"
+  },
+  {
+    "nombreIngrediente": "tahini"
+  },
+  {
+    "nombreIngrediente": "tallarines"
+  },
+  {
+    "nombreIngrediente": "tamari"
+  },
+  {
+    "nombreIngrediente": "tamarindo"
+  },
+  {
+    "nombreIngrediente": "tamarindo fresco"
+  },
+  {
+    "nombreIngrediente": "tarta"
+  },
+  {
+    "nombreIngrediente": "tarta de manzana"
+  },
+  {
+    "nombreIngrediente": "te matcha"
+  },
+  {
+    "nombreIngrediente": "te negro"
+  },
+  {
+    "nombreIngrediente": "te verde"
+  },
+  {
+    "nombreIngrediente": "tempeh"
+  },
+  {
+    "nombreIngrediente": "ternera"
+  },
+  {
+    "nombreIngrediente": "tocineta"
+  },
+  {
+    "nombreIngrediente": "tofu"
+  },
+  {
+    "nombreIngrediente": "tomate"
+  },
+  {
+    "nombreIngrediente": "tomate cherry"
+  },
+  {
+    "nombreIngrediente": "tomate deshidratado"
+  },
+  {
+    "nombreIngrediente": "tomate seco"
+  },
+  {
+    "nombreIngrediente": "tomate verde"
+  },
+  {
+    "nombreIngrediente": "tomillo"
+  },
+  {
+    "nombreIngrediente": "tonico"
+  },
+  {
+    "nombreIngrediente": "tortilla"
+  },
+  {
+    "nombreIngrediente": "tortilla de maiz"
+  },
+  {
+    "nombreIngrediente": "tortilla española"
+  },
+  {
+    "nombreIngrediente": "trigo"
+  },
+  {
+    "nombreIngrediente": "trucha"
+  },
+  {
+    "nombreIngrediente": "trufa"
+  },
+  {
+    "nombreIngrediente": "té chai"
+  },
+  {
+    "nombreIngrediente": "té de hierbas"
+  },
+  {
+    "nombreIngrediente": "té de jazmín"
+  },
+  {
+    "nombreIngrediente": "té de menta"
+  },
+  {
+    "nombreIngrediente": "té verde matcha"
+  },
+  {
+    "nombreIngrediente": "vainilla"
+  },
+  {
+    "nombreIngrediente": "vainilla en polvo"
+  },
+  {
+    "nombreIngrediente": "vainilla líquida"
+  },
+  {
+    "nombreIngrediente": "varitas de cangrejo"
+  },
+  {
+    "nombreIngrediente": "vegetales mixtos"
+  },
+  {
+    "nombreIngrediente": "verduras al vapor"
+  },
+  {
+    "nombreIngrediente": "vinagre"
+  },
+  {
+    "nombreIngrediente": "vinagre balsamico"
+  },
+  {
+    "nombreIngrediente": "vinagre de arroz"
+  },
+  {
+    "nombreIngrediente": "vinagre de manzana"
+  },
+  {
+    "nombreIngrediente": "vino blanco"
+  },
+  {
+    "nombreIngrediente": "vino rosado"
+  },
+  {
+    "nombreIngrediente": "vino tinto"
+  },
+  {
+    "nombreIngrediente": "wasabi"
+  },
+  {
+    "nombreIngrediente": "whisky"
+  },
+  {
+    "nombreIngrediente": "wok"
+  },
+  {
+    "nombreIngrediente": "xilitol"
+  },
+  {
+    "nombreIngrediente": "yogur"
+  },
+  {
+    "nombreIngrediente": "yogur griego"
+  },
+  {
+    "nombreIngrediente": "yogur natural"
+  },
+  {
+    "nombreIngrediente": "yuca"
+  },
+  {
+    "nombreIngrediente": "yuca frita"
+  },
+  {
+    "nombreIngrediente": "zanahoria"
+  },
+  {
+    "nombreIngrediente": "zapallito italiano"
+  },
+  {
+    "nombreIngrediente": "zapallo"
+  },
+  {
+    "nombreIngrediente": "zapallo italiano"
+  },
+  {
+    "nombreIngrediente": "zarzamora"
+  }
 ]

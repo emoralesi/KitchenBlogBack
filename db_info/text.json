@@ -1,0 +1,84 @@
+{
+  "titulo": "Pasta Con Salsa Boloñesa",
+  "descripcion": "Rica pasta boloñesa con receta directamente de Italia para disfrutar en familia de 4 personas, espero que lo disfruten ! no olviden de comentar y darle me gusta a la publicacion",
+  "hours": 0,
+  "minutes": 37,
+  "cantidadPersonas": 4,
+  "dificultad": "687aa366de7e83e04f9b7987",
+  "categoria": "687aa351de7e83e04f9b7979",
+  "grupoIngrediente": [
+    {
+      "nombreGrupo": "Pasta Boloñesa",
+      "items": [
+        {
+          "id": 1,
+          "valor": 100,
+          "idIngrediente": "687aa371de7e83e04f9b7a9e",
+          "idMedida": "687aa387de7e83e04f9b7b0a"
+        },
+        {
+          "id": 2,
+          "valor": 2,
+          "idIngrediente": "687aa371de7e83e04f9b799c",
+          "idMedida": "687aa387de7e83e04f9b7b14"
+        },
+        {
+          "id": 3,
+          "valor": 1,
+          "idIngrediente": "687aa371de7e83e04f9b7aae",
+          "idMedida": "687aa387de7e83e04f9b7b0f"
+        },
+        {
+          "id": 4,
+          "valor": 1,
+          "idIngrediente": "687aa371de7e83e04f9b79cf",
+          "idMedida": "687aa4a1de7e83e04f9b7b3e"
+        },
+        {
+          "id": 5,
+          "valor": 500,
+          "idIngrediente": "687aa371de7e83e04f9b7acd",
+          "idMedida": "687aa387de7e83e04f9b7b0a"
+        },
+        {
+          "id": 6,
+          "valor": 200,
+          "idIngrediente": "687aa371de7e83e04f9b799d",
+          "idMedida": "687aa387de7e83e04f9b7b0a"
+        },
+        {
+          "id": 7,
+          "valor": 50,
+          "idIngrediente": "687aa371de7e83e04f9b7998",
+          "idMedida": "687aa387de7e83e04f9b7b0c"
+        },
+        {
+          "id": 8,
+          "valor": 800,
+          "idIngrediente": "687aa371de7e83e04f9b7ada",
+          "idMedida": "687aa387de7e83e04f9b7b0a"
+        }
+      ]
+    }
+  ],
+  "utencilio": ["687aa3b1de7e83e04f9b7b23", "687aa3b1de7e83e04f9b7b24"],
+  "subCategoria": ["687aa39bde7e83e04f9b7b1d"],
+  "pasos": [
+    {
+      "pasoNumero": 1,
+      "descripcion": "Cortamos la cebolla y el ajo en cuadritos y lo empezamos a freir hasta que la cebolla quede transparente"
+    },
+    {
+      "pasoNumero": 2,
+      "descripcion": "Cortamos el tomate en trozos y lo agregamos al sarten y lo dejamos cocinar a fuego medio por 15 minutos"
+    },
+    { "pasoNumero": 3, "descripcion": "Agregamos sal a gusto y la albahaca" },
+    {
+      "pasoNumero": 4,
+      "descripcion": "cocinamos los tallarines y lo trasladamos al sarten para mezcar la salsa y los tallerines juntos, agregamos el queso parmesano y a servir !"
+    }
+  ],
+  "user": "687aa1330c3f22564cecfbce",
+  "imagesRecipe": [{}],
+  "imagesSteps": []
+}
