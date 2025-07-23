@@ -66,15 +66,14 @@ const upload = multer({ storage: storage });
 
 const connections = new Map();
 const { v2: cloudinary } = pkg;
-// Configuración de Cloudinary
+
 cloudinary.config({
-  cloud_name: "dhkttsgtq",
-  api_key: "134496632225334",
-  api_secret: "vMp7YF2trsIqrsz4h4-U7xdf3oU",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 export function sendSSEToUser(userId, eventData) {
-  // Encuentra la conexión del usuario
   console.log("mi user id notificado", userId);
   const userConnections = connections.get(userId.toString());
 
@@ -726,7 +725,7 @@ app.post(
 
       const optimizedUrl = await cloudinary.uploader.upload(req.file.path, {
         folder: "Profiles_images",
-        format: "png",
+        format: "webp",
         fetch_format: "auto",
         quality: "auto",
         asset_folder: "Profiles_images",

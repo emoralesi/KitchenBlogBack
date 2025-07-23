@@ -181,7 +181,7 @@ export const guardarReceta = async (
   for (const file of imageRecipes) {
     const optimizedUrl = await cloudinary.uploader.upload(file.path, {
       folder: "Recipe_images",
-      format: "png",
+      format: "webp",
       fetch_format: "auto",
       quality: "auto",
       asset_folder: "Recipe_images",
@@ -235,7 +235,7 @@ export const guardarReceta = async (
           imageSteps[index].path,
           {
             folder: "Steps_images",
-            format: "png",
+            format: "webp",
             fetch_format: "auto",
             quality: "auto",
             asset_folder: "Steps_images",
@@ -414,7 +414,7 @@ export const actualizarReceta = async (
         for (const file of recipeImages) {
           const optimizedUrl = await cloudinary.uploader.upload(file.path, {
             folder: "Recipe_images",
-            format: "png",
+            format: "webp",
             fetch_format: "auto",
             quality: "auto",
             asset_folder: "Recipe_images",
