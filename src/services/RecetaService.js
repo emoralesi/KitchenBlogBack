@@ -30,14 +30,12 @@ import { compareRecetas } from "../utils/compareReceta.js";
 import path from "path";
 
 export const GetRecetasByIdUser = async (params, res) => {
-  console.log(params);
   try {
     const Recetas = await obtenerRecetaByIdUser(
       params.userId,
       params.page,
       params.limit
     );
-    console.log(Recetas);
     if (Recetas[0]?.recetas?.length > 0) {
       res.status(200).json({
         status: "ok",
@@ -62,10 +60,8 @@ export const GetRecetasByIdUser = async (params, res) => {
 };
 
 export const GetFullRecetaById = async (params, res) => {
-  console.log(params);
   try {
     const Recetas = await getRecetaComentReactions(params.recetaId);
-    console.log(Recetas);
     if (Recetas.length > 0) {
       res.status(200).json({
         status: "ok",
@@ -91,7 +87,6 @@ export const GetFullRecetaById = async (params, res) => {
 export const saveUpdateReactionReceta = async (params, res) => {
   try {
     let update;
-    console.log(params);
     var findReaction;
     var saveReactionResult;
     if (params.estado == true) {
@@ -112,8 +107,6 @@ export const saveUpdateReactionReceta = async (params, res) => {
         message: "Invalid status value. Use 'true' or 'false'.",
       });
     }
-
-    console.log("update", update);
 
     const reactionNew = await updateRecetaReaction(params.idReceta, update);
 
@@ -145,9 +138,6 @@ export const saveUpdateReactionReceta = async (params, res) => {
     };
 
     if (params.estado == true) {
-      console.log(params.idUser);
-      console.log(recetaNoti.user.toString());
-      console.log(params.idUser !== recetaNoti.user.toString());
       if (params.idUser !== recetaNoti.user.toString()) {
         await sendNotification({
           user_notificated: recetaNoti.user.toString(),
@@ -157,7 +147,6 @@ export const saveUpdateReactionReceta = async (params, res) => {
           referenceModelo: TypeReferenceModelo.Reaction,
           action: TypeNotification.LikeToReceta,
         });
-        console.log("mi notificado : ", recetaNoti.user.toString());
         sendSSEToUser(recetaNoti.user.toString(), result);
       }
     }
@@ -189,16 +178,13 @@ export const guardarReceta = async (
     uploadedRecipeImages.push(optimizedUrl.url);
   }
 
-  console.log("pase bien");
-
   params.images = uploadedRecipeImages;
 
   params.pined = false;
   params.active = true;
 
-  // const session = await mongoose.startSession();
-  // session.startTransaction();
-  console.log("mi params", params);
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     var gruposId = [];
     for (const values of params.grupoIngrediente) {
@@ -225,7 +211,6 @@ export const guardarReceta = async (
     params.grupoIngrediente = gruposId;
 
     var pasosId = [];
-    console.log("mis params pasos", params.pasos);
 
     for (const [index, values] of params.pasos.entries()) {
       var optimizedUrl = null;
@@ -245,11 +230,9 @@ export const guardarReceta = async (
 
       values.imageStep = optimizedUrl ? optimizedUrl.url : null;
       const resultPasos = await savePasos(values);
-      console.log("mi result pasos", resultPasos);
 
       pasosId.push(resultPasos._id.toString());
     }
-    console.log("mis pasosId", pasosId);
 
     params.pasos = pasosId;
     params.favourite = [];
@@ -281,7 +264,6 @@ export const actualizarReceta = async (
 ) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-  // console.log("mi params", params);
   try {
     var gruposId = [];
     for (const values of params.grupoIngrediente) {
@@ -441,9 +423,8 @@ export const actualizarReceta = async (
             quality: "auto",
             asset_folder: "Recipe_images",
           });
-          console.log("mi OptimizedUrlObject", optimizedUrl);
 
-          params.images.push(optimizedUrl.url); // Agrega la URL de la imagen subida
+          params.images.push(optimizedUrl.url);
         }
       }
       newReceta = await updateReceta(params);

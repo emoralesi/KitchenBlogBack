@@ -18,7 +18,6 @@ export const getUserbyId = async (idUser) => {
 };
 
 export const getUserbyUsename = async (userName) => {
-  console.log("mi userName", userName);
   try {
     return await Usuario.findOne(
       { username: userName.toLowerCase() },
@@ -31,7 +30,6 @@ export const getUserbyUsename = async (userName) => {
 };
 
 export const obtenerFavouriteByIdUser = async (idUser, page, limit) => {
-  console.log("mi idUser desde dao", idUser);
   const userId = new ObjectId(idUser);
   const skip = (page - 1) * limit;
 
@@ -550,7 +548,6 @@ export const obtenerFavouriteByIdUser = async (idUser, page, limit) => {
 };
 
 export const obtenerDatosRecAndFav = async (idUser) => {
-  console.log("mi idUser desde dao", idUser);
   const userId = new ObjectId(idUser);
   try {
     return await Usuario.aggregate([

@@ -13,7 +13,6 @@ export const UserRegister = async (body, res) => {
   try {
     const existingUser = await getUserbyEmail(body.email);
     const existingUserName = await getUserbyUsename(body.username);
-    console.log(existingUserName);
     if (existingUser) {
       return res
         .status(400)
@@ -107,7 +106,6 @@ export const LoginUser = async (body, res) => {
 
 export const getUserDescubrir = async (body, res) => {
   const result = await getUsersDescovery(body);
-  console.log(result.usuarios);
   if (result.usuarios.length > 0) {
     res
       .status(200)
@@ -151,7 +149,6 @@ export const saveUpdateFavourite = async (params, res) => {
       params.idReceta,
       updateReceta
     );
-    console.log("mi updateReceta", updateReceta);
 
     if (!result) {
       return res

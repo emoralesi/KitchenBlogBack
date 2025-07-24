@@ -125,8 +125,6 @@ export const getRecetasInfo = async (page, limit, filters, orderBy) => {
 
     const sortField = sortFieldMap[order] || "relevanteScore";
 
-    console.log("mi orderby", orderBy);
-
     const recetas = await Receta.aggregate([
       {
         $match: match,
@@ -1425,8 +1423,6 @@ export const obtenerShopping = async (idRecetas) => {
   idRecetas.forEach((element, index, arr) => {
     arr[index] = new ObjectId(element);
   });
-
-  console.log("mi idReceta", idRecetas);
 
   try {
     const shopping = Receta.aggregate([

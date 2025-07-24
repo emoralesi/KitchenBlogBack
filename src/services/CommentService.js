@@ -58,22 +58,15 @@ export const guardarComment = async (params, res) => {
 
                 const usuariosDelParentPost = await getAnswerdOfComment(params.parentComment)
 
-                console.log("mis respuestas al parentComment", usuariosDelParentPost);
                 let users = [];
 
                 usuariosDelParentPost.forEach(element => {
                     users.push(element.user.toString())
                 });
 
-                console.log("mi result parentComment", result.parentComment);
-                console.log("mi result parentComment user", result.parentComment.user);
-
                 users.push(result.parentComment.user.toString())
 
-                console.log("despues de agregar las cosicas", users);
-
                 const usuariosNotification = [...new Set(users)];
-                console.log("mi array para el elemento", usuariosNotification);
 
                 result.parentComment.user = await getUserbyId(result.parentComment.user.toString());
 
@@ -106,7 +99,6 @@ export const guardarComment = async (params, res) => {
 }
 
 export const saveUpdateReactionComment = async (params, res) => {
-    console.log("mi params", params);
     try {
         let update;
         var findReaction;
@@ -117,11 +109,10 @@ export const saveUpdateReactionComment = async (params, res) => {
                 referencia_id: params.idComment,
                 referenciaModelo: 'Comentario'
             });
-            update = { $addToSet: { reactions: saveReactionResult._id } }; // $addToSet prevents duplicates
+            update = { $addToSet: { reactions: saveReactionResult._id } };
         } else if (params.estado === false) {
 
             findReaction = await getReactionByComment(params.idUser, params.idComment)
-            console.log("mi reaccion encontrada", findReaction);
 
             update = { $pull: { reactions: findReaction[0]._id } };
         } else {
@@ -159,16 +150,13 @@ export const saveUpdateReactionComment = async (params, res) => {
                             referenceModelo: TypeReferenceModelo.Reaction,
                             action: TypeNotification.LikeToComment
                         })
-                        //console.log("mi notificado : ", getComment[0].user.toString());
                         sendSSEToUser(getComment[0].user.toString(), result)
                     }
                     break;
                 case TypeNotification.LikeToAnswerd:
                     const getParentComment = await getCommentById(params.parentComment);
-                    //console.log("getParentComment", getParentComment);
                     result.parentComment = getParentComment[0];
 
-                    //console.log("result final", result);
                     if (params.idUser !== getComment[0].user.toString()) {
                         await sendNotification({
                             user_notificated: getComment[0].user.toString(),
@@ -178,7 +166,6 @@ export const saveUpdateReactionComment = async (params, res) => {
                             referenceModelo: TypeReferenceModelo.Reaction,
                             action: TypeNotification.LikeToAnswerd
                         })
-                        //console.log("mi notificado : ", getComment[0].user.toString());
                         sendSSEToUser(getComment[0].user.toString(), result)
                     }
                     break;

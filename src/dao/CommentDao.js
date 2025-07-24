@@ -59,7 +59,6 @@ export const getRecetaUserIdByComment = async (id) => {
                 }
             ]
         );
-        console.log("dao receta user", UserId);
         return UserId;
     } catch (error) {
         throw error
@@ -95,7 +94,6 @@ export const getCommentUserIdByComment = async (id) => {
             ]
 
         );
-        console.log("Dao", UserId);
         return UserId;
     } catch (error) {
         throw error
@@ -115,7 +113,6 @@ export const getCommentById = async (id) => {
                 }
             ]
         );
-        console.log("comment by id", comment);
         return comment;
     } catch (error) {
         throw error
@@ -144,7 +141,6 @@ export const getCommentOwnerByParentComment = async (id) => {
             ]
 
         );
-        console.log("Dao", UserId);
         return UserId;
     } catch (error) {
         throw error

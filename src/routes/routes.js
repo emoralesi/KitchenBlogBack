@@ -74,15 +74,11 @@ cloudinary.config({
 });
 
 export function sendSSEToUser(userId, eventData) {
-  console.log("mi user id notificado", userId);
   const userConnections = connections.get(userId.toString());
 
-  // Si el usuario tiene conexiones abiertas
   if (userConnections) {
-    // Construye el evento SSE
     const sseEvent = `data: ${JSON.stringify(eventData)}\n\n`;
 
-    // Envía el evento SSE a cada conexión del usuario
     userConnections.forEach((clientResponse) => {
       clientResponse.write(sseEvent);
     });
@@ -224,13 +220,6 @@ app.post(
       const recipeImages = req.files["recipeImages"];
       const stepsImages = req.files["stepsImages"];
       const receta = JSON.parse(req.body.receta);
-      // Accede al resto de los datos JSON
-
-      console.log("Imágenes de la receta: ", recipeImages);
-      console.log("Imágenes de los pasos: ", stepsImages);
-      console.log("Receta: ", receta);
-
-      // Parse the receta object if necessary
 
       return await guardarReceta(
         receta,
@@ -536,7 +525,6 @@ app.get("/obtenerDificultades", authMiddleware, async (req, res) => {
 app.post("/obtenerIdUsuarioByUserName", authMiddleware, async (req, res) => {
   try {
     const Usuario = await getUserbyUsename(req.body.username);
-    console.log("mi usuario", Usuario);
     res.status(200).json({ status: "ok", userId: Usuario._id, user: Usuario });
   } catch (error) {
     console.error("Error al obtener Dificultades: ", error);
@@ -611,7 +599,6 @@ app.post("/desactivarReceta", authMiddleware, async (req, res) => {
 
 app.post("/obtenerFavourite", authMiddleware, async (req, res) => {
   try {
-    console.log("mis parametros de entrada", req.body);
 
     const User = await obtenerFavouriteByIdUser(
       req.body.idUser,
@@ -649,7 +636,6 @@ app.post("/obtenerRecetasinfo", authMiddleware, async (req, res) => {
       req.body.filter,
       req.body.orderBy
     );
-    console.log("mi Recetas", Recetas);
 
     if (Recetas.recetas?.length > 0) {
       res.status(200).json({
@@ -690,7 +676,6 @@ app.post("/obtenerDataUsuario", authMiddleware, async (req, res) => {
 app.post("/obtenerShopping", authMiddleware, async (req, res) => {
   try {
     const Shopping = await obtenerShopping(req.body.idRecetas);
-    console.log("mi shopping", Shopping);
 
     res.status(200).json({ status: "ok", data: Shopping });
   } catch (error) {
@@ -721,7 +706,6 @@ app.post(
   upload.single("profileImage"),
   async (req, res) => {
     try {
-      console.log("path", req.file.path);
 
       const optimizedUrl = await cloudinary.uploader.upload(req.file.path, {
         folder: "Profiles_images",
@@ -732,7 +716,6 @@ app.post(
       });
 
       const user = await Usuario.findById(req.body.idUsuario);
-      console.log("mi user id", req.body.idUsuario);
       // Asegúrate de que req.user._id esté disponible
       user.profileImageUrl = optimizedUrl.url; // Guarda la URL de la imagen en la base de datos
       await user.save();
