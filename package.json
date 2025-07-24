@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start":"node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev_local": "node --env-file .env.local index.js",
     "teste_conection": "node testconecction.js",
