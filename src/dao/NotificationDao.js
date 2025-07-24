@@ -1,5 +1,6 @@
-import Notification from "../models/NotificationModel.js";
+import Notification from "../models/notificationModel.js";
 import { ObjectId } from "mongodb";
+
 
 export const saveNotification = async (notification) => {
   try {
