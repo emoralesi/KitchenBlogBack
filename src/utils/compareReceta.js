@@ -1,4 +1,4 @@
-export const compareRecetas = (obj1, obj2) => {
+export const compareRecetas = (obj1, obj2) => {    
     if (
         obj1.titulo !== obj2.titulo ||
         obj1.cantidadPersonas !== obj2.cantidadPersonas ||

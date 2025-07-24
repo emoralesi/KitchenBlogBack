@@ -300,17 +300,34 @@ export const actualizarReceta = async (
             items.push(valueItems._id);
 
             const originalItem = await obtenerItem(valueItems._id);
+
+            const arr1 = valueItems.alternativas
+              ?.slice()
+              .sort()
+              .map((e) => e.idIngrediente.toString());
+            const arr2 = originalItem.alternativas
+              ?.slice()
+              .sort()
+              .map((e) => e.ingrediente.toString());
+
             if (
               valueItems.valor !== originalItem.valor ||
               valueItems.idIngrediente !==
                 originalItem.ingrediente.toString() ||
-              valueItems.idMedida !== originalItem.medida.toString()
+              valueItems.idMedida !== originalItem.medida.toString() ||
+              valueItems.idPresentacion !==
+                originalItem.presentacion?.toString() ||
+              JSON.stringify(arr1) !== JSON.stringify(arr2)
             ) {
               await updateItem({
                 _id: valueItems._id,
                 valor: valueItems.valor,
                 ingrediente: valueItems.idIngrediente,
                 medida: valueItems.idMedida,
+                presentacion: valueItems.idPresentacion || null,
+                alternativas: valueItems.alternativas.map((alt) => ({
+                  ingrediente: alt.idIngrediente,
+                })),
               });
             }
           } else {
@@ -318,6 +335,10 @@ export const actualizarReceta = async (
               valor: valueItems.valor,
               ingrediente: valueItems.idIngrediente,
               medida: valueItems.idMedida,
+              presentacion: valueItems.idPresentacion || null,
+              alternativas: valueItems.alternativas.map((alt) => ({
+                ingrediente: alt.idIngrediente,
+              })),
             });
             items.push(result._id.toString());
             enableUpdate = true;
@@ -337,6 +358,10 @@ export const actualizarReceta = async (
             valor: valueItems.valor,
             ingrediente: valueItems.idIngrediente,
             medida: valueItems.idMedida,
+            presentacion: valueItems.idPresentacion || null,
+            alternativas: valueItems.alternativas.map((alt) => ({
+              ingrediente: alt.idIngrediente,
+            })),
           });
           items.push(result._id.toString());
         }
@@ -375,9 +400,6 @@ export const actualizarReceta = async (
     params.pasos = pasosId;
 
     const originalReceta = await getRecetaById(params._id);
-
-    console.log("receta original", originalReceta);
-    // console.log(params);
 
     params.favourite = originalReceta.favourite;
     params.images = params.imagesRecipe?.filter(

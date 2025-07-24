@@ -1080,6 +1080,16 @@ export const obtenerRecetaByIdUser = async (idUser, page, limit) => {
           },
         },
       },
+      {
+        $set: {
+          pasos: {
+            $sortArray: {
+              input: "$pasos",
+              sortBy: { pasoNumero: 1 },
+            },
+          },
+        },
+      },
 
       { $sort: { pined: -1, fechaReceta: -1 } },
 

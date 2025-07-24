@@ -1121,6 +1121,16 @@ export const getRecetaComentReactions = async (idReceta) => {
         },
       },
       {
+        $set: {
+          pasos: {
+            $sortArray: {
+              input: "$pasos",
+              sortBy: { pasoNumero: 1 },
+            },
+          },
+        },
+      },
+      {
         $project: {
           commentUsers: 0,
           responseUsers: 0,
