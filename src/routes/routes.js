@@ -599,7 +599,6 @@ app.post("/desactivarReceta", authMiddleware, async (req, res) => {
 
 app.post("/obtenerFavourite", authMiddleware, async (req, res) => {
   try {
-
     const User = await obtenerFavouriteByIdUser(
       req.body.idUser,
       req.body.page,
@@ -706,23 +705,23 @@ app.post(
   upload.single("profileImage"),
   async (req, res) => {
     try {
-
       const optimizedUrl = await cloudinary.uploader.upload(req.file.path, {
         folder: "Profiles_images",
         format: "webp",
         fetch_format: "auto",
         quality: "auto",
-        asset_folder: "Profiles_images",
+        width: 1600,
+        crop: "limit",
       });
 
       const user = await Usuario.findById(req.body.idUsuario);
-      // Asegúrate de que req.user._id esté disponible
-      user.profileImageUrl = optimizedUrl.url; // Guarda la URL de la imagen en la base de datos
+
+      user.profileImageUrl = optimizedUrl.public_id; // Guarda la URL de la imagen en la base de datos
       await user.save();
 
       res.json({
         message: "Imagen de perfil actualizada correctamente",
-        imageUrl: optimizedUrl.url,
+        imageUrl: optimizedUrl.public_id,
       });
     } catch (error) {
       console.log(error);

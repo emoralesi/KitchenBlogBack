@@ -168,14 +168,16 @@ export const guardarReceta = async (
   let uploadedRecipeImages = [];
 
   for (const file of imageRecipes) {
-    const optimizedUrl = await cloudinary.uploader.upload(file.path, {
+    const result = await cloudinary.uploader.upload(file.path, {
       folder: "Recipe_images",
       format: "webp",
       fetch_format: "auto",
       quality: "auto",
-      asset_folder: "Recipe_images",
+      width: 1600,
+      crop: "limit",
     });
-    uploadedRecipeImages.push(optimizedUrl.url);
+
+    uploadedRecipeImages.push(result.public_id);
   }
 
   params.images = uploadedRecipeImages;
@@ -416,15 +418,16 @@ export const actualizarReceta = async (
 
       if (recipeImages !== undefined) {
         for (const file of recipeImages) {
-          const optimizedUrl = await cloudinary.uploader.upload(file.path, {
+          const result = await cloudinary.uploader.upload(file.path, {
             folder: "Recipe_images",
             format: "webp",
             fetch_format: "auto",
             quality: "auto",
-            asset_folder: "Recipe_images",
+            width: 1600,
+            crop: "limit",
           });
 
-          params.images.push(optimizedUrl.url);
+          params.images.push(result.public_id);
         }
       }
       newReceta = await updateReceta(params);
