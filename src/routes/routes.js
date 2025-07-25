@@ -140,9 +140,15 @@ app.post(
     body("password")
       .isLength({ min: 6 })
       .withMessage("La contraseña debe tener al menos 6 caracteres"),
+    body("username")
+      .isLength({ min: 3 })
+      .withMessage("El nombre de usuario debe tener al menos 3 caracteres")
+      .matches(/^[a-zA-Z0-9_]+$/)
+      .withMessage(
+        "El nombre de usuario solo puede contener letras, números y guiones bajos"
+      ),
   ],
   async (req, res) => {
-    // Validar los datos de entrada
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res

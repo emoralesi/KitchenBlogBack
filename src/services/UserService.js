@@ -25,16 +25,16 @@ export const UserRegister = async (body, res) => {
     if (existingUserName) {
       return res
         .status(400)
-        .json({ status: "warning", message: "El usuario ya está registrado" });
+        .json({ status: "warning", message: "El nombre de usuario ya está registrado" });
     }
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(body.password, 10);
 
     // Crear un nuevo usuario
     const usuario = {
-      email: body.email.toLowerCase(),
+      email: body.email.trim().toLowerCase(),
       password: hashedPassword,
-      username: body.username.toLowerCase(),
+      username: body.username.trim().toLowerCase(),
       favourite: [],
     };
 
