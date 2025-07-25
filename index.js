@@ -5,19 +5,17 @@ import mongoose from "mongoose";
 
 const app = express();
 const port = process.env.PORT || 3600;
-
-app.use(cors());
-app.use(express.json());
-app.use(router);
-
+const host = process.env.HOST || "0.0.0.0";
 const mongoDB = process.env.MONGO_HOST;
-const host = process.env.HOST;
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
 
-// Conectar a la base de datos MongoDB
+app.use(cors());
+app.use(express.json());
+app.use(router);;
+
 mongoose.connect(mongoDB, clientOptions);
 
 const db = mongoose.connection;
