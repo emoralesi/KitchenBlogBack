@@ -101,17 +101,8 @@ export const getRecetasInfo = async (page, limit, filters, orderBy) => {
       match.subCategoria = { $all: subCategoriasModificadas };
     }
 
-    if (filters?.ingredientes?.length > 0) {
-      const ingredienteModificado = filters.ingredientes.map(
-        (id) => new ObjectId(id)
-      );
-
-      ingredienteMatch = {
-        "grupoIngrediente.item.ingrediente._id": {
-          $all: ingredienteModificado,
-        },
-      };
-    }
+    const ingredienteModificado =
+      filters?.ingredientes?.map((id) => new ObjectId(id)) || [];
 
     const order = orderBy?.orderBy || "relevante";
     const direction = orderBy?.direction === "asc" ? 1 : -1;
@@ -630,9 +621,83 @@ export const getRecetasInfo = async (page, limit, filters, orderBy) => {
               },
             },
             { $sort: { [sortField]: direction, fechaReceta: -1 } },
-            {
-              $match: ingredienteMatch,
-            },
+            ...(ingredienteModificado.length > 0
+              ? [
+                  {
+                    $addFields: {
+                      allIngredientesIds: {
+                        $setUnion: [
+                          {
+                            $reduce: {
+                              input: {
+                                $map: {
+                                  input: { $ifNull: ["$grupoIngrediente", []] },
+                                  as: "grupo",
+                                  in: {
+                                    $map: {
+                                      input: { $ifNull: ["$$grupo.item", []] },
+                                      as: "item",
+                                      in: "$$item.ingrediente._id",
+                                    },
+                                  },
+                                },
+                              },
+                              initialValue: [],
+                              in: { $concatArrays: ["$$value", "$$this"] },
+                            },
+                          },
+                          {
+                            $reduce: {
+                              input: {
+                                $map: {
+                                  input: { $ifNull: ["$grupoIngrediente", []] },
+                                  as: "grupo",
+                                  in: {
+                                    $map: {
+                                      input: { $ifNull: ["$$grupo.item", []] },
+                                      as: "item",
+                                      in: {
+                                        $map: {
+                                          input: {
+                                            $ifNull: [
+                                              "$$item.alternativas",
+                                              [],
+                                            ],
+                                          },
+                                          as: "alt",
+                                          in: "$$alt._id",
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                              initialValue: [],
+                              in: {
+                                $reduce: {
+                                  input: "$$this",
+                                  initialValue: "$$value",
+                                  in: { $concatArrays: ["$$value", "$$this"] },
+                                },
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    $match: {
+                      $expr: {
+                        $setIsSubset: [
+                          ingredienteModificado,
+                          "$allIngredientesIds",
+                        ],
+                      },
+                    },
+                  },
+                ]
+              : []),
             {
               $skip: skip,
             },
