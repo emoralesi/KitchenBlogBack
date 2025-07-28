@@ -48,6 +48,7 @@ import {
 } from "../services/UserService.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import multer from "multer";
+import { guardarIngrediente } from "../services/IngredienteService.js";
 
 const app = express();
 const sse = new SSE();
@@ -322,8 +323,7 @@ app.post("/readedNotification", authMiddleware, async (req, res) => {
 
 app.post("/saveIngrediente", authMiddleware, async (req, res) => {
   try {
-    const ingrediente = await saveIngrediente(req.body);
-    res.status(200).json({ status: "ok", data: ingrediente });
+    return await guardarIngrediente(req.body.nuevoIngrediente, res);
   } catch (error) {
     console.error("Error al registrar ingrediente: ", error);
     return res.status(500).json({
