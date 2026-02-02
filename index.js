@@ -12,9 +12,21 @@ const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://kitchen-blog-front.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
+
+app.options("*", cors());
+
 app.use(express.json());
-app.use(router);;
+app.use(router);
+
 
 mongoose.connect(mongoDB, clientOptions);
 
