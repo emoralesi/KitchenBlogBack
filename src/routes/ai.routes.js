@@ -5,18 +5,18 @@ const routerIA = Router();
 
 routerIA.post("/ai/receta", async (req, res) => {
   try {
-    const { message } = req.body;
+    const { prompt } = req.body;
 
-    if (!message) {
+    if (!prompt) {
       return res.status(400).json({
-        error: "El campo 'message' es obligatorio",
+        error: "El campo 'prompt' es obligatorio",
       });
     }
 
     const receta = await generarRecetaIA([
       {
         role: "user",
-        content: message,
+        content: prompt,
       },
     ]);
 
