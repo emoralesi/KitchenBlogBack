@@ -133,7 +133,7 @@ Devuelve SOLO el JSON con esta estructura EXACTA:
 
     // 5️⃣ Llamada a la IA
     const response = await client.chatCompletion({
-      model: "openai/gpt-oss-120b:groq",
+      model: "openai/gpt-oss-120b",
       messages: finalMessages,
     });
 
