@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import router from "./src/routes/routes.js";
+import routerIA from "./src/routes/ai.routes.js"
 import mongoose from "mongoose";
 
 const app = express();
@@ -26,7 +27,7 @@ app.options("*", cors());
 
 app.use(express.json());
 app.use(router);
-
+app.use(routerIA);
 
 mongoose.connect(mongoDB, clientOptions);
 
